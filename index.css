@@ -23,7 +23,7 @@ html, body{
 
 body {
     color: white;
-  background: radial-gradient(circle at center, #272727 0%, #1A1110 100%);
+  background: radial-gradient(circle at center, #272727 0%, #131111 100%);
   background-repeat: no-repeat;
   background-size: cover;
 }
