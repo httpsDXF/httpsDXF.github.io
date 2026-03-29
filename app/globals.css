@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+:root {
+  --background: #000000;
+  --foreground: #fafafa;
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --t-fast: 180ms;
+  --t-ui: 240ms;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* GPU-friendly entrances; disabled when user prefers reduced motion */
+@keyframes hero-word-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.55em, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes hero-enter-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-title-word {
+    display: inline-block;
+    opacity: 0;
+    animation: hero-word-in 1.12s var(--ease-smooth) forwards;
+  }
+
+  .hero-title-delay-1 {
+    animation-delay: 90ms;
+  }
+
+  .hero-title-delay-2 {
+    animation-delay: 220ms;
+  }
+
+  .hero-title-delay-3 {
+    animation-delay: 350ms;
+  }
+
+  .hero-enter {
+    opacity: 0;
+    animation: hero-enter-in 0.72s var(--ease-smooth) forwards;
+  }
+
+  .hero-enter-delay-1 {
+    animation-delay: 0.45s;
+  }
+
+  .hero-enter-delay-2 {
+    animation-delay: 0.62s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-title-word,
+  .hero-enter {
+    opacity: 1;
+    animation: none;
+    transform: none;
+  }
+}
+
+.interaction-smooth {
+  transition-property: color, background-color, border-color, opacity, transform, box-shadow;
+  transition-duration: var(--t-ui);
+  transition-timing-function: var(--ease-smooth);
+}
+
+.interaction-fast {
+  transition-property: color, background-color, border-color, opacity, transform;
+  transition-duration: var(--t-fast);
+  transition-timing-function: var(--ease-smooth);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
