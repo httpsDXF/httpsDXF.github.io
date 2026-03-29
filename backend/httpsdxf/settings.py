@@ -222,3 +222,7 @@ if not DEBUG:
         ]
     _ssl_redirect = os.environ.get("DJANGO_SECURE_SSL_REDIRECT", "false").lower()
     SECURE_SSL_REDIRECT = _ssl_redirect in ("1", "true", "yes")
+
+# --- Hire / contact form notifications ---
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "noreply@localhost").strip()
+CONTACT_NOTIFICATION_EMAIL = os.environ.get("CONTACT_NOTIFICATION_EMAIL", "").strip()

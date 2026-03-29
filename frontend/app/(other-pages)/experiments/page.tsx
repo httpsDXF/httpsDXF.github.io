@@ -1,13 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ExperimentCardPreview } from "@/app/components/experiments/ExperimentCardPreview";
-import { fetchExperiments } from "@/lib/api";
+import { fetchExperiments, type Experiment } from "@/lib/api";
 import { siteUrl } from "../../config/site";
+
+function isPlaceholderExperiments(list: Experiment[]): boolean {
+  return list.length > 0 && list[0].id < 0;
+}
 
 export const metadata: Metadata = {
   title: "Experiments",
   description:
-    "Experiments and prototypes by Yaw Appiah (httpsDXF) — software, robotics, and mechatronics.",
+    "Experiments and work-in-progress by Yaw Appiah (httpsDXF) — app previews, robotics and mechatronics notes, CAD demos, and interactive 3D viewers.",
   alternates: { canonical: `${siteUrl}/experiments` },
 };
 
@@ -15,7 +19,7 @@ const STATIC_INTRO = [
   {
     title: "3D viewer",
     description:
-      "Interactive models with orbit controls and exploded views for multi-part assemblies.",
+      "Standalone demo for glTF and CAD-style assets: orbit controls and exploded views when you upload multi-part models.",
     href: "/experiments/view",
     cta: "Open viewer",
     variant: "viewer" as const,
@@ -24,6 +28,7 @@ const STATIC_INTRO = [
 
 export default async function ExperimentsPage() {
   const apiList = await fetchExperiments();
+  const showSampleNote = isPlaceholderExperiments(apiList);
 
   return (
     <div>
@@ -31,7 +36,8 @@ export default async function ExperimentsPage() {
         Experiments
       </h1>
       <p className="mt-4 max-w-2xl text-lg text-white/70">
-        Prototypes, CAD viewers, and tooling.
+        Prototypes, CAD viewers, and tooling — including sample GLB projects when the
+        API has no uploads yet.
       </p>
 
       <ul className="mt-12 grid gap-8 sm:grid-cols-2">
@@ -80,10 +86,10 @@ export default async function ExperimentsPage() {
                   {exp.title}
                 </h2>
                 <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-zinc-400">
-                  {exp.description || "3D model"}
+                  {exp.description || "Experiment"}
                 </p>
                 <p className="mt-4 flex items-center gap-1 text-sm font-medium text-white/85">
-                  Open viewer
+                  Open
                   <span
                     className="transition-transform group-hover:translate-x-0.5"
                     aria-hidden
@@ -97,9 +103,12 @@ export default async function ExperimentsPage() {
         ))}
       </ul>
 
-      {apiList.length === 0 ? (
-        <p className="mt-10 text-sm text-zinc-500">
-          Project models will appear here when published.
+      {showSampleNote ? (
+        <p className="mt-10 max-w-2xl text-sm text-zinc-500">
+          Showing sample experiments (Khronos glTF demos) until your API returns
+          published entries or you upload from the dashboard. Use title and
+          description to label app previews, docs, or robotics work — the
+          interactive viewer applies when the asset is a 3D model.
         </p>
       ) : null}
     </div>

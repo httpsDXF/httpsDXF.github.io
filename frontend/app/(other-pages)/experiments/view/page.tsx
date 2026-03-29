@@ -28,8 +28,9 @@ export default function ExperimentsViewPage() {
         3D viewer
       </h1>
       <p className="mt-2 max-w-xl text-sm text-zinc-500">
-        Sample model for orbit and lighting. Upload workflows are handled from the
-        dashboard experiments flow.
+        Standalone mesh preview (orbit and lighting). Other experiment types
+        — app previews, robotics documentation, and more — live on the main
+        experiments list; upload models from the dashboard when you are ready.
       </p>
 
       <ModelViewer modelUrl={null} localFile={null} className="mt-8" />

@@ -4,6 +4,13 @@
 export const siteUrl = "https://httpsdxf.me" as const;
 
 /**
+ * Optional public inbox for mailto links (e.g. on /hire). Set
+ * `NEXT_PUBLIC_CONTACT_EMAIL` in the frontend env at build time.
+ */
+export const publicContactEmail: string =
+  process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() ?? "";
+
+/**
  * SEO & identity — keep descriptions readable; avoid keyword stuffing.
  */
 export const siteConfig = {

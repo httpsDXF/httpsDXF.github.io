@@ -99,7 +99,10 @@ export default function DashboardExperimentsPage() {
     <div>
       <h1 className="text-2xl font-bold">Experiments</h1>
       <p className="mt-1 max-w-xl text-sm text-zinc-400">
-        Upload a 3D model; add an optional preview image for experiment cards.
+        Showcase work in progress: unreleased apps, robotics or hardware write-ups,
+        or CAD and mesh demos. Upload a model file for the interactive 3D viewer;
+        use title and description so cards read clearly for non-3D work too. Add
+        an optional preview image for the grid.
       </p>
 
       <form
@@ -159,13 +162,18 @@ export default function DashboardExperimentsPage() {
           </span>
         </label>
         <label className="flex flex-col gap-1 text-sm">
-          <span className="text-zinc-400">Model file</span>
+          <span className="text-zinc-400">Primary asset (3D model)</span>
           <input
             type="file"
             accept=".glb,.gltf,.stl,.obj"
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
             className="text-sm text-zinc-300 file:mr-3 file:rounded-md file:border-0 file:bg-white/10 file:px-3 file:py-1.5 file:text-white"
           />
+          <span className="text-xs text-zinc-500">
+            Powers the interactive viewer on the public page. Use title and
+            description to spell out app previews, robotics work, or
+            documentation — not only the mesh.
+          </span>
         </label>
         {err ? (
           <p className="text-sm text-red-400/90" role="alert">

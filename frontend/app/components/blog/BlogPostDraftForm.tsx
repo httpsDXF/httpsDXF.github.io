@@ -2,6 +2,7 @@
 
 import { BlogCoverImageField } from "@/app/components/blog/BlogCoverImageField";
 import { BlogEditor } from "@/app/components/blog/BlogEditor";
+import type { BlogCategory } from "@/lib/api";
 
 export function BlogPostDraftForm({
   stickyHeading,
@@ -23,6 +24,9 @@ export function BlogPostDraftForm({
   initialCoverUrl,
   mediaFiles,
   setMediaFiles,
+  categoriesList,
+  selectedCategorySlugs,
+  toggleCategorySlug,
   onSubmit,
   err,
   msg,
@@ -47,6 +51,9 @@ export function BlogPostDraftForm({
   initialCoverUrl?: string | null;
   mediaFiles: File[];
   setMediaFiles: (f: File[]) => void;
+  categoriesList: BlogCategory[];
+  selectedCategorySlugs: string[];
+  toggleCategorySlug: (slug: string) => void;
   onSubmit: (e: React.FormEvent) => void;
   err: string | null;
   msg: string | null;
@@ -98,6 +105,43 @@ export function BlogPostDraftForm({
           />
           Visible on public blog
         </label>
+
+        {categoriesList.length > 0 ? (
+          <fieldset className="mt-6">
+            <legend className="text-sm font-medium text-zinc-500">
+              Categories
+            </legend>
+            <ul className="mt-2 flex flex-wrap gap-2">
+              {[...categoriesList]
+                .sort(
+                  (a, b) =>
+                    a.order - b.order || a.name.localeCompare(b.name),
+                )
+                .map((c) => {
+                  const on = selectedCategorySlugs.includes(c.slug);
+                  return (
+                    <li key={c.id}>
+                      <label
+                        className={`inline-flex cursor-pointer items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors ${
+                          on
+                            ? "border-emerald-500/50 bg-emerald-500/15 text-emerald-100"
+                            : "border-white/15 text-zinc-400 hover:border-white/25"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          className="sr-only"
+                          checked={on}
+                          onChange={() => toggleCategorySlug(c.slug)}
+                        />
+                        {c.name}
+                      </label>
+                    </li>
+                  );
+                })}
+            </ul>
+          </fieldset>
+        ) : null}
 
         <details className="mt-8 rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3">
           <summary className="cursor-pointer text-sm font-medium text-zinc-300">

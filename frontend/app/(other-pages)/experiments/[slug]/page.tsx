@@ -1,18 +1,11 @@
 import type { Metadata } from "next";
-import { fetchExperimentSlugs } from "@/lib/api";
+import { fetchExperiment, fetchExperimentSlugs } from "@/lib/api";
 import { siteUrl } from "../../../config/site";
 import { ExperimentDetailClient } from "./ExperimentDetailClient";
 
 export async function generateStaticParams() {
-  try {
-    const slugs = await fetchExperimentSlugs();
-    if (slugs.length) {
-      return slugs.map((slug) => ({ slug }));
-    }
-  } catch {
-    /* ignore */
-  }
-  return [{ slug: "offline" }];
+  const slugs = await fetchExperimentSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -21,8 +14,10 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
+  const exp = await fetchExperiment(slug);
   return {
-    title: `Experiment · ${slug}`,
+    title: exp?.title ?? `Experiment · ${slug}`,
+    description: exp?.description,
     alternates: { canonical: `${siteUrl}/experiments/${slug}` },
   };
 }

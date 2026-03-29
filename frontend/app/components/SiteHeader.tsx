@@ -48,7 +48,7 @@ export function SiteHeader() {
             </Link>
           ))}
           <Link
-            href="/me"
+            href="/hire"
             className="interaction-smooth rounded-md border border-white/20 bg-white/10 px-4 py-2 text-white hover:border-white/35 hover:bg-white/15 hover:scale-[1.02] active:scale-[0.98]"
           >
             Hire Me
@@ -126,7 +126,7 @@ export function SiteHeader() {
               </Link>
             ))}
             <Link
-              href="/me"
+              href="/hire"
               className="mobile-nav-link interaction-smooth mt-2 block rounded-md border border-white/25 bg-white/10 px-4 py-3 text-center text-lg font-medium text-white hover:border-white/40 hover:bg-white/15 active:scale-[0.99]"
               onClick={() => setOpen(false)}
             >

@@ -94,10 +94,19 @@ export function ExperimentDetailClient({ slug }: { slug: string }) {
       <h1 className="mt-4 text-3xl font-bold tracking-tight md:text-4xl">
         {exp.title}
       </h1>
+      {exp.id < 0 ? (
+        <p className="mt-3 text-xs font-medium uppercase tracking-wider text-zinc-500">
+          Sample experiment · offline preview
+        </p>
+      ) : null}
       {exp.description ? (
         <p className="mt-4 text-lg text-white/70">{exp.description}</p>
       ) : null}
       <p className="mt-2 text-xs text-zinc-500">Format: {exp.source_format}</p>
+      <p className="mt-6 text-sm text-zinc-500">
+        3D viewer — use the description above for apps, robotics, or docs
+        context.
+      </p>
       {exp.preview_image_url ? (
         <div className="relative mt-8 aspect-[21/9] w-full max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-zinc-900">
           <Image

@@ -30,8 +30,9 @@ export default function DashboardHomePage() {
     <div>
       <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Overview</h1>
       <p className="mt-2 max-w-lg text-sm text-zinc-400">
-        Manage published writing and 3D experiments. Use the sidebar to switch
-        between sections.
+        Manage published writing, portfolio, and experiments — including demos,
+        app previews, and 3D assets. Use the sidebar to switch between
+        sections.
       </p>
       <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <li>

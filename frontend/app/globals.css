@@ -79,6 +79,34 @@
   }
 }
 
+/* Portfolio grid: staggered fade-up on load */
+@keyframes portfolio-card-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .portfolio-card-animate {
+    opacity: 0;
+    animation: portfolio-card-in 0.62s var(--ease-smooth) forwards;
+    animation-fill-mode: both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-card-animate {
+    opacity: 1;
+    animation: none;
+    transform: none;
+  }
+}
+
 .interaction-smooth {
   transition-property: color, background-color, border-color, opacity, transform, box-shadow;
   transition-duration: var(--t-ui);

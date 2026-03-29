@@ -3,22 +3,46 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { BlogPostDraftForm } from "@/app/components/blog/BlogPostDraftForm";
-import { getApiBase, type BlogCategory } from "@/lib/api";
+import {
+  DEFAULT_CASE_STUDY_JSON,
+  PortfolioProjectForm,
+} from "@/app/components/portfolio/PortfolioProjectForm";
+import { getApiBase, type PortfolioCategory } from "@/lib/api";
 import { authHeaders, clearTokens, getAccessToken } from "@/lib/auth";
 import { slugify } from "@/lib/slug";
 
-export default function DashboardNewBlogPostPage() {
+function parseCaseStudyPayload(
+  raw: string,
+): { ok: true; value: unknown } | { ok: false; message: string } {
+  const t = raw.trim();
+  if (!t) {
+    return { ok: true, value: [] };
+  }
+  try {
+    const v = JSON.parse(t) as unknown;
+    if (!Array.isArray(v)) {
+      return { ok: false, message: "Case study must be a JSON array." };
+    }
+    return { ok: true, value: v };
+  } catch {
+    return { ok: false, message: "Case study must be valid JSON." };
+  }
+}
+
+export default function DashboardNewPortfolioProjectPage() {
   const router = useRouter();
   const base = getApiBase();
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [description, setDescription] = useState("");
-  const [bodyHtml, setBodyHtml] = useState("");
+  const [meta, setMeta] = useState("");
+  const [order, setOrder] = useState("0");
   const [published, setPublished] = useState(true);
   const [coverFile, setCoverFile] = useState<File | null>(null);
-  const [mediaFiles, setMediaFiles] = useState<File[]>([]);
-  const [categoriesList, setCategoriesList] = useState<BlogCategory[]>([]);
+  const [caseStudyJson, setCaseStudyJson] = useState(DEFAULT_CASE_STUDY_JSON);
+  const [categoriesList, setCategoriesList] = useState<PortfolioCategory[]>(
+    [],
+  );
   const [selectedCategorySlugs, setSelectedCategorySlugs] = useState<string[]>(
     [],
   );
@@ -27,7 +51,7 @@ export default function DashboardNewBlogPostPage() {
 
   const loadCategories = useCallback(async () => {
     if (!base) return;
-    const r = await fetch(`${base}/api/blog/categories/`, {
+    const r = await fetch(`${base}/api/portfolio/categories/`, {
       headers: authHeaders(),
     });
     if (r.status === 401) {
@@ -56,28 +80,24 @@ export default function DashboardNewBlogPostPage() {
       setErr("Missing NEXT_PUBLIC_API_URL.");
       return;
     }
-    const textLen = bodyHtml
-      .replace(/<[^>]+>/g, " ")
-      .replace(/\s+/g, " ")
-      .trim().length;
-    if (textLen < 12) {
-      setErr("Add more to the story body — text, headings, or images.");
+    const parsed = parseCaseStudyPayload(caseStudyJson);
+    if (!parsed.ok) {
+      setErr(parsed.message);
       return;
     }
     const fd = new FormData();
-    fd.append("title", title);
-    fd.append("slug", slug || slugify(title));
+    fd.append("title", title.trim());
+    fd.append("slug", (slug.trim() || slugify(title)).trim());
     fd.append("description", description);
-    fd.append("body", bodyHtml);
-    fd.append("body_format", "html");
+    fd.append("meta", meta);
+    const n = Number.parseInt(order, 10);
+    fd.append("order", String(Number.isFinite(n) ? n : 0));
     fd.append("published", published ? "true" : "false");
     if (coverFile) fd.append("cover_image", coverFile);
-    for (const f of mediaFiles) {
-      fd.append("media", f);
-    }
     fd.append("category_slugs", JSON.stringify(selectedCategorySlugs));
+    fd.append("case_study", JSON.stringify(parsed.value));
 
-    const r = await fetch(`${base}/api/blog/posts/`, {
+    const r = await fetch(`${base}/api/portfolio/projects/`, {
       method: "POST",
       headers: authHeaders(),
       body: fd,
@@ -92,8 +112,8 @@ export default function DashboardNewBlogPostPage() {
       setErr(JSON.stringify(j));
       return;
     }
-    setMsg("Post created.");
-    router.push("/dashboard/blog");
+    setMsg("Project created.");
+    router.push("/dashboard/portfolio");
   }
 
   if (!getAccessToken()) return null;
@@ -102,32 +122,33 @@ export default function DashboardNewBlogPostPage() {
     <div>
       <div className="mb-6 flex flex-wrap items-center gap-3 text-sm">
         <Link
-          href="/dashboard/blog"
+          href="/dashboard/portfolio"
           className="text-zinc-500 transition hover:text-white"
         >
-          ← All posts
+          ← All projects
         </Link>
       </div>
 
-      <BlogPostDraftForm
-        stickyHeading="New story"
+      <PortfolioProjectForm
+        stickyHeading="New project"
         stickyBadge="Draft"
-        submitLabel="Publish"
-        editorMountKey="new"
-        initialHtml=""
+        submitLabel="Create"
         title={title}
         setTitle={setTitle}
         slug={slug}
         setSlug={setSlug}
         description={description}
         setDescription={setDescription}
-        setBodyHtml={setBodyHtml}
+        meta={meta}
+        setMeta={setMeta}
+        order={order}
+        setOrder={setOrder}
         published={published}
         setPublished={setPublished}
         coverFile={coverFile}
         setCoverFile={setCoverFile}
-        mediaFiles={mediaFiles}
-        setMediaFiles={setMediaFiles}
+        caseStudyJson={caseStudyJson}
+        setCaseStudyJson={setCaseStudyJson}
         categoriesList={categoriesList}
         selectedCategorySlugs={selectedCategorySlugs}
         toggleCategorySlug={toggleCategorySlug}

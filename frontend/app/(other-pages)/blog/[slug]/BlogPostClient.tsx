@@ -58,6 +58,19 @@ export function BlogPostClient({ slug }: { slug: string }) {
       <h1 className="mt-4 text-3xl font-bold tracking-tight md:text-4xl">
         {post.title}
       </h1>
+      {(post.categories?.length ?? 0) > 0 ? (
+        <div className="mt-3 flex flex-wrap gap-2">
+          {(post.categories ?? []).map((c) => (
+            <Link
+              key={c.slug}
+              href={`/blog?category=${encodeURIComponent(c.slug)}`}
+              className="rounded-full border border-white/15 px-2.5 py-0.5 text-xs text-zinc-400 transition-colors hover:border-white/30 hover:text-white"
+            >
+              {c.name}
+            </Link>
+          ))}
+        </div>
+      ) : null}
       <p className="mt-2 text-sm text-zinc-500">
         {new Date(post.created_at).toLocaleDateString(undefined, {
           year: "numeric",

@@ -1,130 +1,212 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import {
-  DEFAULT_PORTFOLIO_CATEGORIES,
-  addPortfolioCategory,
-  getAllPortfolioCategories,
-  getStoredExtraCategories,
-  removePortfolioCategory,
-} from "@/lib/portfolioCategories";
-import { getAccessToken } from "@/lib/auth";
+import { useCallback, useEffect, useState } from "react";
+import { getApiBase, mediaUrl, type PortfolioProject } from "@/lib/api";
+import { authHeaders, clearTokens, getAccessToken } from "@/lib/auth";
 
-export default function DashboardPortfolioPage() {
+export default function DashboardPortfolioProjectsPage() {
   const router = useRouter();
-  const [categories, setCategories] = useState<string[]>([]);
-  const [newName, setNewName] = useState("");
+  const base = getApiBase();
+  const [projects, setProjects] = useState<PortfolioProject[]>([]);
   const [msg, setMsg] = useState<string | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  const [deletingSlug, setDeletingSlug] = useState<string | null>(null);
 
-  function refresh() {
-    setCategories(getAllPortfolioCategories());
-  }
+  const load = useCallback(async () => {
+    if (!base) return;
+    const r = await fetch(`${base}/api/portfolio/projects/`, {
+      headers: authHeaders(),
+    });
+    if (r.status === 401) {
+      clearTokens();
+      router.replace("/dashboard/login");
+      return;
+    }
+    if (!r.ok) return;
+    setProjects(await r.json());
+  }, [base, router]);
 
   useEffect(() => {
     if (!getAccessToken()) {
       router.replace("/dashboard/login");
       return;
     }
-    refresh();
-  }, [router]);
+    const id = window.setTimeout(() => void load(), 0);
+    return () => window.clearTimeout(id);
+  }, [router, load]);
 
-  function submit(e: React.FormEvent) {
-    e.preventDefault();
-    setMsg(null);
-    const ok = addPortfolioCategory(newName);
-    if (ok) {
-      setNewName("");
-      setMsg("Category added. It appears on the public Portfolio page in this browser.");
-      refresh();
-    } else {
-      setMsg(
-        "Use a unique name (not empty or duplicate of an existing category).",
+  async function deleteProject(slug: string, title: string) {
+    if (!base) return;
+    const ok = window.confirm(
+      `Delete “${title}”? This cannot be undone.`,
+    );
+    if (!ok) return;
+    setDeletingSlug(slug);
+    setErr(null);
+    try {
+      const r = await fetch(
+        `${base}/api/portfolio/projects/${encodeURIComponent(slug)}/`,
+        {
+          method: "DELETE",
+          headers: authHeaders(),
+        },
       );
+      if (r.status === 401) {
+        clearTokens();
+        router.replace("/dashboard/login");
+        return;
+      }
+      if (!r.ok) {
+        const j = (await r.json().catch(() => ({}))) as Record<string, unknown>;
+        setErr(
+          typeof j.detail === "string" ? j.detail : "Could not delete project.",
+        );
+        return;
+      }
+      setMsg("Project deleted.");
+      void load();
+    } finally {
+      setDeletingSlug(null);
     }
-  }
-
-  function remove(name: string) {
-    if ((DEFAULT_PORTFOLIO_CATEGORIES as readonly string[]).includes(name)) {
-      setMsg("Built-in categories (Mechatronics, Brand, Photography) cannot be removed.");
-      return;
-    }
-    removePortfolioCategory(name);
-    refresh();
-    setMsg("Category removed.");
   }
 
   if (!getAccessToken()) return null;
 
-  const extras = getStoredExtraCategories();
-
   return (
     <div className="pt-2">
-      <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
-        Portfolio categories
-      </h1>
-      <p className="mt-2 max-w-xl text-sm text-zinc-400">
-        Default sections are{" "}
-        <span className="text-zinc-300">Mechatronics</span>,{" "}
-        <span className="text-zinc-300">Brand</span>, and{" "}
-        <span className="text-zinc-300">Photography</span>. Add more below; they
-        are stored in this browser (localStorage) until a CMS or API is wired up.
+      <p className="text-sm text-zinc-500">
+        Cover images appear on the portfolio grid. Edit case study content
+        (text, images, video blocks) in the JSON field on each project. Manage
+        filter chips under{" "}
+        <Link
+          href="/dashboard/portfolio/categories"
+          className="text-emerald-400/90 underline underline-offset-2 hover:text-emerald-300"
+        >
+          Portfolio categories
+        </Link>
+        .
       </p>
 
-      <ul className="mt-8 space-y-2 rounded-xl border border-white/10 bg-white/[0.02] p-4">
-        {categories.map((c) => {
-          const isDefault = (
-            DEFAULT_PORTFOLIO_CATEGORIES as readonly string[]
-          ).includes(c);
-          return (
-            <li
-              key={c}
-              className="flex items-center justify-between gap-3 border-b border-white/5 py-2 last:border-0"
+      <section className="mt-10">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <h2 className="text-lg font-semibold text-white">All projects</h2>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/dashboard/portfolio/categories"
+              className="interaction-smooth shrink-0 rounded-full border border-white/15 px-4 py-2 text-sm font-medium text-zinc-300 hover:border-white/25 hover:text-white"
             >
-              <span className="font-medium text-white">{c}</span>
-              {isDefault ? (
-                <span className="text-xs text-zinc-600">Built-in</span>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => remove(c)}
-                  className="text-xs text-red-400/90 hover:text-red-300"
-                >
-                  Remove
-                </button>
-              )}
-            </li>
-          );
-        })}
-      </ul>
-
-      <form onSubmit={submit} className="mt-8 max-w-md">
-        <label className="block text-sm text-zinc-500">New category</label>
-        <div className="mt-2 flex flex-wrap gap-2">
-          <input
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-            placeholder="e.g. Motion design"
-            className="min-w-[200px] flex-1 rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-white outline-none focus:border-white/35"
-          />
-          <button
-            type="submit"
-            className="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/15"
-          >
-            Add category
-          </button>
+              Categories
+            </Link>
+            <Link
+              href="/dashboard/portfolio/new"
+              className="interaction-smooth shrink-0 rounded-full border border-emerald-600/50 bg-emerald-600/25 px-5 py-2 text-sm font-medium text-emerald-100 hover:bg-emerald-600/35"
+            >
+              New project
+            </Link>
+          </div>
         </div>
-      </form>
+        {projects.length === 0 ? (
+          <p className="mt-4 rounded-2xl border border-dashed border-white/15 bg-white/[0.02] px-6 py-12 text-center text-sm text-zinc-500">
+            No projects yet. Use{" "}
+            <Link
+              href="/dashboard/portfolio/new"
+              className="text-emerald-400/90 underline underline-offset-2 hover:text-emerald-300"
+            >
+              New project
+            </Link>{" "}
+            to add your first case study.
+          </p>
+        ) : (
+          <ul className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {projects.map((p) => (
+              <li key={p.slug}>
+                <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/40 shadow-sm shadow-black/20 transition hover:border-white/20 hover:bg-zinc-900/60">
+                  <Link
+                    href={`/dashboard/portfolio/edit?slug=${encodeURIComponent(p.slug)}`}
+                    className="group flex min-h-0 flex-1 flex-col focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50"
+                  >
+                    <div className="relative aspect-[16/10] w-full bg-zinc-800">
+                      {p.cover_image_url ? (
+                        <Image
+                          src={mediaUrl(p.cover_image_url)}
+                          alt=""
+                          fill
+                          className="object-cover transition group-hover:opacity-95"
+                          sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                          unoptimized
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center bg-zinc-800/90 text-xs text-zinc-500">
+                          No cover
+                        </div>
+                      )}
+                      <div className="absolute left-3 top-3">
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
+                            p.published
+                              ? "bg-emerald-950/80 text-emerald-200/90 ring-1 ring-emerald-500/30"
+                              : "bg-zinc-950/80 text-zinc-400 ring-1 ring-white/10"
+                          }`}
+                        >
+                          {p.published ? "Published" : "Draft"}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex flex-1 flex-col p-4">
+                      <h3 className="line-clamp-2 font-medium leading-snug text-white group-hover:text-emerald-50/95">
+                        {p.title}
+                      </h3>
+                      {p.description ? (
+                        <p className="mt-2 line-clamp-2 text-sm text-zinc-500">
+                          {p.description}
+                        </p>
+                      ) : null}
+                      <p className="mt-3 text-xs text-zinc-600">
+                        Updated{" "}
+                        {new Date(p.updated_at).toLocaleDateString(undefined, {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })}
+                      </p>
+                      <span className="mt-3 text-sm font-medium text-emerald-400/90 group-hover:text-emerald-300">
+                        Edit →
+                      </span>
+                    </div>
+                  </Link>
+                  <div className="flex items-center justify-end gap-2 border-t border-white/10 px-4 py-3">
+                    <Link
+                      href={`/portfolio/${p.slug}`}
+                      className="rounded-lg px-3 py-1.5 text-sm text-zinc-400 transition hover:bg-white/5 hover:text-white"
+                    >
+                      View
+                    </Link>
+                    <button
+                      type="button"
+                      disabled={deletingSlug === p.slug}
+                      onClick={() => void deleteProject(p.slug, p.title)}
+                      className="rounded-lg px-3 py-1.5 text-sm text-red-400/90 transition hover:bg-red-500/10 hover:text-red-300 disabled:opacity-50"
+                    >
+                      {deletingSlug === p.slug ? "…" : "Delete"}
+                    </button>
+                  </div>
+                </article>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
 
-      {msg ? (
-        <p className="mt-4 text-sm text-emerald-400/90" role="status">
-          {msg}
+      {err ? (
+        <p className="mt-6 text-sm text-red-400/90" role="alert">
+          {err}
         </p>
       ) : null}
-      {extras.length === 0 ? (
-        <p className="mt-4 text-xs text-zinc-600">
-          No extra categories yet.
-        </p>
+      {msg ? (
+        <p className="mt-6 text-sm text-emerald-400/90">{msg}</p>
       ) : null}
     </div>
   );

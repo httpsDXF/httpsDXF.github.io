@@ -7,9 +7,33 @@ import { clearTokens } from "@/lib/auth";
 
 const nav = [
   { href: "/dashboard", label: "Overview" },
-  { href: "/dashboard/blog", label: "Blog posts" },
+  {
+    href: "/dashboard/blog",
+    label: "Blog posts",
+    active: (p: string) =>
+      p === "/dashboard/blog" ||
+      p.startsWith("/dashboard/blog/edit") ||
+      p.startsWith("/dashboard/blog/new"),
+  },
+  {
+    href: "/dashboard/blog/categories",
+    label: "Blog categories",
+    active: (p: string) => p.startsWith("/dashboard/blog/categories"),
+  },
   { href: "/dashboard/experiments", label: "Experiments" },
-  { href: "/dashboard/portfolio", label: "Portfolio" },
+  {
+    href: "/dashboard/portfolio",
+    label: "Portfolio",
+    active: (p: string) =>
+      p === "/dashboard/portfolio" ||
+      p.startsWith("/dashboard/portfolio/edit") ||
+      p.startsWith("/dashboard/portfolio/new"),
+  },
+  {
+    href: "/dashboard/portfolio/categories",
+    label: "Portfolio categories",
+    active: (p: string) => p.startsWith("/dashboard/portfolio/categories"),
+  },
 ] as const;
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
@@ -59,11 +83,14 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           >
             Home
           </Link>
-          {nav.map(({ href, label }) => {
+          {nav.map((item) => {
+            const { href, label } = item;
             const active =
-              href === "/dashboard"
-                ? pathname === "/dashboard"
-                : pathname === href || pathname.startsWith(`${href}/`);
+              "active" in item && typeof item.active === "function"
+                ? item.active(pathname)
+                : href === "/dashboard"
+                  ? pathname === "/dashboard"
+                  : pathname === href || pathname.startsWith(`${href}/`);
             return (
               <Link
                 key={href}

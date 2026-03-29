@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
+import { PortfolioIndexClient } from "./PortfolioIndexClient";
 import { siteUrl } from "../../config/site";
-import { PortfolioClient } from "./PortfolioClient";
 
 export const metadata: Metadata = {
   title: "Portfolio",
@@ -10,5 +11,18 @@ export const metadata: Metadata = {
 };
 
 export default function PortfolioPage() {
-  return <PortfolioClient />;
+  return (
+    <div>
+      <h1 className="text-3xl font-bold tracking-tight md:text-4xl">Portfolio</h1>
+      <Suspense
+        fallback={
+          <p className="mt-6 text-zinc-500" aria-live="polite">
+            Loading…
+          </p>
+        }
+      >
+        <PortfolioIndexClient />
+      </Suspense>
+    </div>
+  );
 }

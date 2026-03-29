@@ -3,35 +3,60 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useState } from "react";
-import { BlogPostDraftForm } from "@/app/components/blog/BlogPostDraftForm";
-import { getApiBase, type BlogCategory, type BlogPost } from "@/lib/api";
+import { PortfolioProjectForm } from "@/app/components/portfolio/PortfolioProjectForm";
+import {
+  getApiBase,
+  type PortfolioCategory,
+  type PortfolioProject,
+} from "@/lib/api";
 import { authHeaders, clearTokens, getAccessToken } from "@/lib/auth";
 
-function EditBlogPostInner() {
+function parseCaseStudyPayload(
+  raw: string,
+): { ok: true; value: unknown } | { ok: false; message: string } {
+  const t = raw.trim();
+  if (!t) {
+    return { ok: true, value: [] };
+  }
+  try {
+    const v = JSON.parse(t) as unknown;
+    if (!Array.isArray(v)) {
+      return { ok: false, message: "Case study must be a JSON array." };
+    }
+    return { ok: true, value: v };
+  } catch {
+    return { ok: false, message: "Case study must be valid JSON." };
+  }
+}
+
+function EditPortfolioProjectInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const slugParam = searchParams.get("slug")?.trim() ?? "";
   const base = getApiBase();
 
-  const [post, setPost] = useState<BlogPost | null>(null);
+  const [project, setProject] = useState<PortfolioProject | null>(null);
   const [loadErr, setLoadErr] = useState<string | null>(null);
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [description, setDescription] = useState("");
-  const [bodyHtml, setBodyHtml] = useState("");
+  const [meta, setMeta] = useState("");
+  const [order, setOrder] = useState("0");
   const [published, setPublished] = useState(true);
   const [coverFile, setCoverFile] = useState<File | null>(null);
-  const [mediaFiles, setMediaFiles] = useState<File[]>([]);
+  const [caseStudyJson, setCaseStudyJson] = useState("[]");
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
-  const [categoriesList, setCategoriesList] = useState<BlogCategory[]>([]);
+  const [categoriesList, setCategoriesList] = useState<PortfolioCategory[]>(
+    [],
+  );
   const [selectedCategorySlugs, setSelectedCategorySlugs] = useState<string[]>(
     [],
   );
 
   const loadCategories = useCallback(async () => {
     if (!base) return;
-    const r = await fetch(`${base}/api/blog/categories/`, {
+    const r = await fetch(`${base}/api/portfolio/categories/`, {
       headers: authHeaders(),
     });
     if (r.status === 401) {
@@ -45,9 +70,9 @@ function EditBlogPostInner() {
   const load = useCallback(async () => {
     if (!base || !slugParam) return;
     setLoadErr(null);
-    setPost(null);
+    setProject(null);
     const r = await fetch(
-      `${base}/api/blog/posts/${encodeURIComponent(slugParam)}/`,
+      `${base}/api/portfolio/projects/${encodeURIComponent(slugParam)}/`,
       { headers: authHeaders() },
     );
     if (r.status === 401) {
@@ -56,25 +81,24 @@ function EditBlogPostInner() {
       return;
     }
     if (r.status === 404) {
-      setLoadErr("Post not found.");
+      setLoadErr("Project not found.");
       return;
     }
     if (!r.ok) {
-      setLoadErr("Could not load post.");
+      setLoadErr("Could not load project.");
       return;
     }
-    const data = (await r.json()) as BlogPost;
-    setPost(data);
+    const data = (await r.json()) as PortfolioProject;
+    setProject(data);
     setTitle(data.title);
     setSlug(data.slug);
     setDescription(data.description);
-    setBodyHtml(data.body);
+    setMeta(data.meta);
+    setOrder(String(data.order));
     setPublished(data.published);
     setCoverFile(null);
-    setMediaFiles([]);
-    setSelectedCategorySlugs(
-      data.categories?.map((c) => c.slug) ?? [],
-    );
+    setCaseStudyJson(JSON.stringify(data.case_study ?? [], null, 2));
+    setSelectedCategorySlugs(data.categories?.map((c) => c.slug) ?? []);
   }, [base, router, slugParam]);
 
   useEffect(() => {
@@ -87,7 +111,7 @@ function EditBlogPostInner() {
       return;
     }
     if (!slugParam) {
-      setPost(null);
+      setProject(null);
       setLoadErr(null);
       return;
     }
@@ -108,29 +132,25 @@ function EditBlogPostInner() {
       setErr("Missing NEXT_PUBLIC_API_URL.");
       return;
     }
-    const textLen = bodyHtml
-      .replace(/<[^>]+>/g, " ")
-      .replace(/\s+/g, " ")
-      .trim().length;
-    if (textLen < 12) {
-      setErr("Add more to the story body — text, headings, or images.");
+    const parsed = parseCaseStudyPayload(caseStudyJson);
+    if (!parsed.ok) {
+      setErr(parsed.message);
       return;
     }
     const fd = new FormData();
-    fd.append("title", title);
-    fd.append("slug", slug);
+    fd.append("title", title.trim());
+    fd.append("slug", slug.trim());
     fd.append("description", description);
-    fd.append("body", bodyHtml);
-    fd.append("body_format", "html");
+    fd.append("meta", meta);
+    const n = Number.parseInt(order, 10);
+    fd.append("order", String(Number.isFinite(n) ? n : 0));
     fd.append("published", published ? "true" : "false");
     if (coverFile) fd.append("cover_image", coverFile);
-    for (const f of mediaFiles) {
-      fd.append("media", f);
-    }
     fd.append("category_slugs", JSON.stringify(selectedCategorySlugs));
+    fd.append("case_study", JSON.stringify(parsed.value));
 
     const r = await fetch(
-      `${base}/api/blog/posts/${encodeURIComponent(slugParam)}/`,
+      `${base}/api/portfolio/projects/${encodeURIComponent(slugParam)}/`,
       {
         method: "PATCH",
         headers: authHeaders(),
@@ -147,22 +167,21 @@ function EditBlogPostInner() {
       setErr(JSON.stringify(j));
       return;
     }
-    const updated = (await r.json()) as BlogPost;
-    setPost(updated);
+    const updated = (await r.json()) as PortfolioProject;
+    setProject(updated);
     setTitle(updated.title);
     setSlug(updated.slug);
     setDescription(updated.description);
-    setBodyHtml(updated.body);
+    setMeta(updated.meta);
+    setOrder(String(updated.order));
     setPublished(updated.published);
     setCoverFile(null);
-    setMediaFiles([]);
-    setSelectedCategorySlugs(
-      updated.categories?.map((c) => c.slug) ?? [],
-    );
+    setCaseStudyJson(JSON.stringify(updated.case_study ?? [], null, 2));
+    setSelectedCategorySlugs(updated.categories?.map((c) => c.slug) ?? []);
     setMsg("Saved.");
     if (updated.slug !== slugParam) {
       router.replace(
-        `/dashboard/blog/edit?slug=${encodeURIComponent(updated.slug)}`,
+        `/dashboard/portfolio/edit?slug=${encodeURIComponent(updated.slug)}`,
       );
     }
   }
@@ -172,12 +191,12 @@ function EditBlogPostInner() {
   if (!slugParam) {
     return (
       <div className="rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-8 text-center">
-        <p className="text-zinc-400">Choose a post from the list to edit.</p>
+        <p className="text-zinc-400">Choose a project from the list to edit.</p>
         <Link
-          href="/dashboard/blog"
+          href="/dashboard/portfolio"
           className="mt-4 inline-block text-sm text-emerald-400/90 hover:text-emerald-300"
         >
-          ← All posts
+          ← All projects
         </Link>
       </div>
     );
@@ -188,19 +207,19 @@ function EditBlogPostInner() {
       <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8 text-center">
         <p className="text-zinc-400">{loadErr}</p>
         <Link
-          href="/dashboard/blog"
+          href="/dashboard/portfolio"
           className="mt-4 inline-block text-sm text-emerald-400/90 hover:text-emerald-300"
         >
-          ← Back to blog
+          ← Back to portfolio
         </Link>
       </div>
     );
   }
 
-  if (!post) {
+  if (!project) {
     return (
       <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-16 text-center text-sm text-zinc-500">
-        Loading post…
+        Loading project…
       </div>
     );
   }
@@ -209,40 +228,41 @@ function EditBlogPostInner() {
     <div className="pt-2">
       <div className="mb-6 flex flex-wrap items-center gap-3 text-sm">
         <Link
-          href="/dashboard/blog"
+          href="/dashboard/portfolio"
           className="text-zinc-500 transition hover:text-white"
         >
-          ← All posts
+          ← All projects
         </Link>
         <span className="text-zinc-700">·</span>
         <Link
-          href={`/blog/${post.slug}`}
+          href={`/portfolio/${project.slug}`}
           className="text-zinc-500 transition hover:text-emerald-400/90"
         >
           View live
         </Link>
       </div>
 
-      <BlogPostDraftForm
-        stickyHeading="Edit story"
+      <PortfolioProjectForm
+        stickyHeading="Edit project"
         stickyBadge={published ? "Published" : "Draft"}
         submitLabel="Save"
-        editorMountKey={post.id}
-        initialHtml={post.body}
         title={title}
         setTitle={setTitle}
         slug={slug}
         setSlug={setSlug}
         description={description}
         setDescription={setDescription}
-        setBodyHtml={setBodyHtml}
+        meta={meta}
+        setMeta={setMeta}
+        order={order}
+        setOrder={setOrder}
         published={published}
         setPublished={setPublished}
         coverFile={coverFile}
         setCoverFile={setCoverFile}
-        initialCoverUrl={post.cover_image_url}
-        mediaFiles={mediaFiles}
-        setMediaFiles={setMediaFiles}
+        initialCoverUrl={project.cover_image_url}
+        caseStudyJson={caseStudyJson}
+        setCaseStudyJson={setCaseStudyJson}
         categoriesList={categoriesList}
         selectedCategorySlugs={selectedCategorySlugs}
         toggleCategorySlug={toggleCategorySlug}
@@ -254,7 +274,7 @@ function EditBlogPostInner() {
   );
 }
 
-export default function EditBlogPostPage() {
+export default function EditPortfolioProjectPage() {
   return (
     <Suspense
       fallback={
@@ -263,7 +283,7 @@ export default function EditBlogPostPage() {
         </div>
       }
     >
-      <EditBlogPostInner />
+      <EditPortfolioProjectInner />
     </Suspense>
   );
 }
