@@ -11,7 +11,7 @@ function isPlaceholderPreview(posts: { id: number }[]): boolean {
 export const metadata: Metadata = {
   title: "Blog",
   description:
-    "Writing and notes by Yaw Appiah (httpsDXF) — engineering, STEAM, and technology.",
+    "Posts by Yaw Appiah (httpsDXF) on engineering, robotics, and related work.",
   alternates: { canonical: `${siteUrl}/blog` },
 };
 

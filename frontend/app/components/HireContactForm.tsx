@@ -52,12 +52,12 @@ export function HireContactForm() {
 
   if (status === "sent") {
     return (
-      <div className="rounded-2xl border border-emerald-500/30 bg-emerald-950/30 px-6 py-8 text-center">
+      <div className="card-fade-up rounded-2xl border border-emerald-500/30 bg-emerald-950/30 px-6 py-8 text-center">
         <p className="text-lg font-medium text-emerald-100/95">
-          Thanks — your message was sent.
+          Message sent.
         </p>
         <p className="mt-2 text-sm text-zinc-400">
-          I will get back to you at the email you provided.
+          I&apos;ll reply at the address you entered.
         </p>
         <button
           type="button"
@@ -73,20 +73,20 @@ export function HireContactForm() {
   return (
     <form
       onSubmit={onSubmit}
-      className="relative mx-auto max-w-xl space-y-6 rounded-2xl border border-white/10 bg-zinc-900/40 p-6 md:p-8"
+      className="card-fade-up relative mx-auto max-w-xl space-y-6 rounded-2xl border border-white/10 bg-zinc-900/40 p-6 md:p-8"
       noValidate
     >
       {!getApiBase() ? (
         <p className="rounded-lg border border-amber-500/25 bg-amber-950/25 px-3 py-2 text-sm text-amber-100/90">
           {publicContactEmail
-            ? "If the form cannot send (e.g. static preview), email me directly — see below."
-            : "Set NEXT_PUBLIC_API_URL for submissions, or add NEXT_PUBLIC_CONTACT_EMAIL for a public address on this page."}
+            ? "Static builds can’t post to the API. Use the email at the bottom of this form."
+            : "Set NEXT_PUBLIC_API_URL for the form to submit, or set NEXT_PUBLIC_CONTACT_EMAIL to show a public address here."}
         </p>
       ) : null}
 
       <p className="text-sm leading-relaxed text-zinc-400">
-        Describe what you have in mind and how I can reach you. Submissions are
-        stored securely and I reply from the email address you provide.
+        What you&apos;re trying to build, timeline if you have one, and the best
+        way to reach you. I read every submission.
       </p>
 
       <div className="sr-only" aria-hidden>
@@ -167,10 +167,10 @@ export function HireContactForm() {
           value={projectDescription}
           onChange={(e) => setProjectDescription(e.target.value)}
           className="mt-1.5 w-full resize-y rounded-lg border border-white/15 bg-white/5 px-3 py-2.5 text-white outline-none placeholder:text-zinc-600 focus:border-white/35"
-          placeholder="Goals, timeline, budget range if any, links…"
+          placeholder="What you need, rough timeline, links, constraints…"
         />
         <span className="mt-1 block text-xs text-zinc-500">
-          At least a few sentences help me respond with something useful.
+          A short paragraph is enough to reply usefully.
         </span>
       </label>
 
@@ -202,7 +202,7 @@ export function HireContactForm() {
 
       {publicContactEmail ? (
         <p className="text-center text-sm text-zinc-500">
-          Prefer email?{" "}
+          Or email:{" "}
           <a
             href={`mailto:${publicContactEmail}`}
             className="text-zinc-300 underline-offset-2 hover:underline"

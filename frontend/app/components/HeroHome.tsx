@@ -58,13 +58,13 @@ export function HeroHome({
           <p
             className={`${taglineFontClass} hero-enter hero-enter-delay-1 mt-6 max-w-xl px-2 text-center text-[clamp(1rem,3.2vw,1.35rem)] font-bold leading-snug tracking-tight text-white sm:mt-7 sm:px-0`}
           >
-            Brains. Grit. Zero templates.
+            Software, mechanical, and mechatronics work.
           </p>
           <Link
             href="/portfolio"
             className={`${bodyFontClass} group hero-enter hero-enter-delay-2 interaction-smooth mt-8 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-[0.9375rem] font-extrabold text-black shadow-lg shadow-black/20 hover:scale-[1.03] hover:shadow-xl active:scale-[0.98] sm:mt-10 sm:px-10 sm:py-3.5 sm:text-base`}
           >
-            Explore Now
+            View portfolio
             <span
               className="text-lg leading-none transition-transform duration-240 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0.5"
               aria-hidden

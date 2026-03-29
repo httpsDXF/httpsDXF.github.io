@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { BlogBody } from "@/app/components/blog/BlogBody";
 import type { BlogPost } from "@/lib/api";
 import { fetchBlogPost, mediaUrl } from "@/lib/api";
@@ -83,7 +83,10 @@ export function BlogPostClient({ slug }: { slug: string }) {
       ) : null}
 
       {post.cover_image_url ? (
-        <div className="relative mt-8 aspect-[21/9] w-full max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-zinc-900">
+        <div
+          className="card-fade-up relative mt-8 aspect-[21/9] w-full max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-zinc-900"
+          style={{ "--card-fade-delay": "0ms" } as CSSProperties}
+        >
           <Image
             src={mediaUrl(post.cover_image_url)}
             alt=""

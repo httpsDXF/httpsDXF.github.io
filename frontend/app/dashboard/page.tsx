@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { getAccessToken } from "@/lib/auth";
 
 export default function DashboardHomePage() {
@@ -30,35 +30,31 @@ export default function DashboardHomePage() {
     <div>
       <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Overview</h1>
       <p className="mt-2 max-w-lg text-sm text-zinc-400">
-        Manage published writing, portfolio, and experiments — including demos,
-        app previews, and 3D assets. Use the sidebar to switch between
-        sections.
+        Edit the blog, portfolio, and experiments. Use the sidebar to move
+        between sections.
       </p>
       <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <li>
-          <Link
-            href="/dashboard/blog"
-            className="block rounded-xl border border-white/10 bg-white/[0.04] px-5 py-4 text-base font-medium text-white transition hover:border-white/20 hover:bg-white/[0.07]"
-          >
-            Blog posts
-          </Link>
-        </li>
-        <li>
-          <Link
-            href="/dashboard/experiments"
-            className="block rounded-xl border border-white/10 bg-white/[0.04] px-5 py-4 text-base font-medium text-white transition hover:border-white/20 hover:bg-white/[0.07]"
-          >
-            Experiments
-          </Link>
-        </li>
-        <li>
-          <Link
-            href="/dashboard/portfolio"
-            className="block rounded-xl border border-white/10 bg-white/[0.04] px-5 py-4 text-base font-medium text-white transition hover:border-white/20 hover:bg-white/[0.07]"
-          >
-            Portfolio categories
-          </Link>
-        </li>
+        {(
+          [
+            { href: "/dashboard/blog", label: "Blog posts" },
+            { href: "/dashboard/experiments", label: "Experiments" },
+            { href: "/dashboard/portfolio", label: "Portfolio categories" },
+          ] as const
+        ).map((item, i) => (
+          <li key={item.href}>
+            <Link
+              href={item.href}
+              className="card-fade-up block rounded-xl border border-white/10 bg-white/[0.04] px-5 py-4 text-base font-medium text-white hover:border-white/20 hover:bg-white/[0.07]"
+              style={
+                {
+                  "--card-fade-delay": `${i * 48}ms`,
+                } as CSSProperties
+              }
+            >
+              {item.label}
+            </Link>
+          </li>
+        ))}
       </ul>
     </div>
   );

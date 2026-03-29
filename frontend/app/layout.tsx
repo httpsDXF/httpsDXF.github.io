@@ -22,8 +22,9 @@ export const metadata: Metadata = {
   authors: [{ name: siteConfig.person.name, url: siteUrl }],
   creator: siteConfig.person.name,
   icons: {
-    icon: "/logo.svg",
-    apple: "/logo.svg",
+    icon: [{ url: "/logo.svg", type: "image/svg+xml" }],
+    shortcut: "/logo.svg",
+    apple: [{ url: "/logo.svg", type: "image/svg+xml" }],
   },
   openGraph: {
     type: "website",

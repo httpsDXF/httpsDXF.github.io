@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type CSSProperties } from "react";
 import { getApiBase, mediaUrl, type BlogPost } from "@/lib/api";
 import { authHeaders, clearTokens, getAccessToken } from "@/lib/auth";
 
@@ -71,9 +71,9 @@ export default function DashboardBlogPage() {
   return (
     <div className="pt-2">
       <p className="text-sm text-zinc-500">
-        Open a post card to edit. Use the{" "}
-        <span className="text-zinc-400">+</span> beside an empty line in the
-        editor to add images, video, YouTube, code, or a divider.
+        Click a card to edit. In the editor, use the{" "}
+        <span className="text-zinc-400">+</span> next to a blank line to insert
+        media, embeds, or a divider.
       </p>
 
       <section className="mt-10">
@@ -99,9 +99,16 @@ export default function DashboardBlogPage() {
           </p>
         ) : (
           <ul className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {posts.map((p) => (
+            {posts.map((p, i) => (
               <li key={p.slug}>
-                <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/40 shadow-sm shadow-black/20 transition hover:border-white/20 hover:bg-zinc-900/60">
+                <article
+                  className="card-fade-up flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/40 shadow-sm shadow-black/20 hover:border-white/20 hover:bg-zinc-900/60"
+                  style={
+                    {
+                      "--card-fade-delay": `${Math.min(i, 24) * 48}ms`,
+                    } as CSSProperties
+                  }
+                >
                   <Link
                     href={`/dashboard/blog/edit?slug=${encodeURIComponent(p.slug)}`}
                     className="group flex min-h-0 flex-1 flex-col focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50"

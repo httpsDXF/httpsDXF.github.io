@@ -99,10 +99,9 @@ export default function DashboardExperimentsPage() {
     <div>
       <h1 className="text-2xl font-bold">Experiments</h1>
       <p className="mt-1 max-w-xl text-sm text-zinc-400">
-        Showcase work in progress: unreleased apps, robotics or hardware write-ups,
-        or CAD and mesh demos. Upload a model file for the interactive 3D viewer;
-        use title and description so cards read clearly for non-3D work too. Add
-        an optional preview image for the grid.
+        Each row is a public card plus a detail page with a 3D viewer. Upload a
+        mesh (glTF/GLB/STL/OBJ), set title and description, and optionally add a
+        preview image for the list.
       </p>
 
       <form
@@ -158,7 +157,7 @@ export default function DashboardExperimentsPage() {
             className="text-sm text-zinc-300 file:mr-3 file:rounded-md file:border-0 file:bg-white/10 file:px-3 file:py-1.5 file:text-white"
           />
           <span className="text-xs text-zinc-500">
-            Screenshot or render — shown on the experiments grid.
+            Optional. Shown on the experiments grid.
           </span>
         </label>
         <label className="flex flex-col gap-1 text-sm">
@@ -170,9 +169,8 @@ export default function DashboardExperimentsPage() {
             className="text-sm text-zinc-300 file:mr-3 file:rounded-md file:border-0 file:bg-white/10 file:px-3 file:py-1.5 file:text-white"
           />
           <span className="text-xs text-zinc-500">
-            Powers the interactive viewer on the public page. Use title and
-            description to spell out app previews, robotics work, or
-            documentation — not only the mesh.
+            Required for the viewer on the public page. Use title and description
+            to say what the entry is about, not only the file format.
           </span>
         </label>
         {err ? (

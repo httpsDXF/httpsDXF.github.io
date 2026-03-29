@@ -185,8 +185,8 @@ export default function BlogCategoriesDashboardPage() {
       </div>
 
       <p className="text-sm text-zinc-500">
-        Categories appear as filter chips on the public blog. Assign them when
-        creating or editing a post.
+        These names show up as filter chips on the public blog. Attach them in
+        each post&apos;s form.
       </p>
 
       <section className="mt-10">

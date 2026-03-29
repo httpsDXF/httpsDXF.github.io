@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import type { Experiment } from "@/lib/api";
 import { fetchExperiment, mediaUrl } from "@/lib/api";
 
@@ -104,11 +104,14 @@ export function ExperimentDetailClient({ slug }: { slug: string }) {
       ) : null}
       <p className="mt-2 text-xs text-zinc-500">Format: {exp.source_format}</p>
       <p className="mt-6 text-sm text-zinc-500">
-        3D viewer — use the description above for apps, robotics, or docs
-        context.
+        Model viewer. The text above is the right place for context (what it is,
+        how you built it, links).
       </p>
       {exp.preview_image_url ? (
-        <div className="relative mt-8 aspect-[21/9] w-full max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-zinc-900">
+        <div
+          className="card-fade-up relative mt-8 aspect-[21/9] w-full max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-zinc-900"
+          style={{ "--card-fade-delay": "0ms" } as CSSProperties}
+        >
           <Image
             src={mediaUrl(exp.preview_image_url)}
             alt=""
@@ -120,7 +123,12 @@ export function ExperimentDetailClient({ slug }: { slug: string }) {
           />
         </div>
       ) : null}
-      <ModelViewer modelUrl={url} localFile={null} className="mt-10" />
+      <div
+        className="card-fade-up mt-10"
+        style={{ "--card-fade-delay": "80ms" } as CSSProperties}
+      >
+        <ModelViewer modelUrl={url} localFile={null} />
+      </div>
     </div>
   );
 }

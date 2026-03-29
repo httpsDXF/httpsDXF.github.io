@@ -116,7 +116,7 @@ export function PortfolioProjectForm({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              placeholder="One or two lines for the card and SEO."
+              placeholder="Short blurb for the card and listings."
               className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-white outline-none focus:border-white/35"
             />
           </label>
@@ -156,13 +156,13 @@ export function PortfolioProjectForm({
             onChange={(e) => setPublished(e.target.checked)}
             className="rounded border-white/30"
           />
-          Published on public portfolio
+          Show on public site
         </label>
 
         {categoriesList.length > 0 ? (
           <fieldset className="mt-6">
             <legend className="text-sm font-medium text-zinc-500">
-              Categories (filter chips)
+              Categories
             </legend>
             <ul className="mt-2 flex flex-wrap gap-2">
               {[...categoriesList]
@@ -196,13 +196,14 @@ export function PortfolioProjectForm({
           <label className="flex flex-col gap-2 text-sm">
             <span className="font-medium text-zinc-500">Case study (JSON)</span>
             <p className="text-xs text-zinc-600">
-              Array of sections with{" "}
+              Top level: array of sections. Each section has{" "}
               <code className="text-zinc-500">heading</code> and{" "}
-              <code className="text-zinc-500">blocks</code>. Blocks:{" "}
+              <code className="text-zinc-500">blocks</code>. Block{" "}
+              <code className="text-zinc-500">type</code>s:{" "}
               <code className="text-zinc-500">paragraph</code>,{" "}
-              <code className="text-zinc-500">image</code> (src, alt, caption),{" "}
-              <code className="text-zinc-500">video</code> (youtube, vimeo, or
-              fileUrl).
+              <code className="text-zinc-500">image</code>,{" "}
+              <code className="text-zinc-500">video</code> (YouTube, Vimeo, or
+              file URL).
             </p>
             <textarea
               value={caseStudyJson}

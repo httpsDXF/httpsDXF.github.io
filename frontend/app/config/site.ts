@@ -22,22 +22,18 @@ export const siteConfig = {
   /** Subpages: use template in layout */
   titleTemplate: "%s · httpsDXF",
   description:
-    "Yaw Nhyira Antwi Appiah (httpsDXF) — software engineer, mechanical engineer, and mechatronics engineer. Robotics, STEAM, and creative engineering. Portfolio and experiments by Yaw Appiah.",
+    "Yaw Nhyira Antwi Appiah (httpsDXF): software, mechanical, and mechatronics engineering. Portfolio, blog, and experiments.",
   /** Used in metadata; focus is clarity for people and crawlers, not ranking guarantees */
   keywords: [
     "httpsDXF",
-    "Yaw",
     "Yaw Appiah",
     "Yaw Nhyira Antwi Appiah",
-    "Software Engineer",
-    "Mechanical Engineer",
-    "Mechatronics Engineer",
-    "crazy cool stuff",
+    "software engineer",
+    "mechanical engineer",
+    "mechatronics engineer",
     "robotics",
     "STEAM",
-    "STEAM education",
     "engineering portfolio",
-    "Yaw portfolio",
   ] as const,
   person: {
     name: "Yaw Nhyira Antwi Appiah",

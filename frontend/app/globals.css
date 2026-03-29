@@ -79,11 +79,11 @@
   }
 }
 
-/* Portfolio grid: staggered fade-up on load */
-@keyframes portfolio-card-in {
+/* Card grids: smooth fade-up; stagger with inline --card-fade-delay (e.g. 48ms steps) */
+@keyframes card-fade-up-in {
   from {
     opacity: 0;
-    transform: translate3d(0, 14px, 0);
+    transform: translate3d(0, 22px, 0);
   }
   to {
     opacity: 1;
@@ -91,16 +91,21 @@
   }
 }
 
+/* Exclude `opacity` from transition so Tailwind `transition` does not fight the keyframes */
 @media (prefers-reduced-motion: no-preference) {
-  .portfolio-card-animate {
+  .card-fade-up {
     opacity: 0;
-    animation: portfolio-card-in 0.62s var(--ease-smooth) forwards;
+    animation: card-fade-up-in 0.75s var(--ease-smooth) forwards;
+    animation-delay: var(--card-fade-delay, 0ms);
     animation-fill-mode: both;
+    transition-property: border-color, background-color, transform, box-shadow;
+    transition-duration: var(--t-ui);
+    transition-timing-function: var(--ease-smooth);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .portfolio-card-animate {
+  .card-fade-up {
     opacity: 1;
     animation: none;
     transform: none;

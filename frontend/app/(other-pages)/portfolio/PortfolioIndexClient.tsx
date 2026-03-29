@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { PortfolioCategoryChips } from "@/app/components/portfolio/PortfolioCategoryChips";
 import {
   fetchPortfolioCategories,
@@ -30,8 +30,12 @@ function PortfolioGridCard({
   return (
     <Link
       href={`/portfolio/${p.slug}`}
-      className="portfolio-card-animate group flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/35 transition-[border-color,background-color,transform] duration-(--t-ui) ease-(--ease-smooth) hover:border-white/20 hover:bg-zinc-900/55 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/35"
-      style={{ animationDelay: `${delayMs}ms` }}
+      className="card-fade-up group flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/35 hover:border-white/20 hover:bg-zinc-900/55 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/35"
+      style={
+        {
+          "--card-fade-delay": `${delayMs}ms`,
+        } as CSSProperties
+      }
     >
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-zinc-800">
         {cover ? (
@@ -60,7 +64,7 @@ function PortfolioGridCard({
           {p.description}
         </p>
         <p className="mt-4 flex items-center gap-1 text-sm font-medium text-white/80">
-          Case study
+          Open
           <span
             className="transition-transform duration-(--t-fast) ease-(--ease-smooth) group-hover:translate-x-0.5"
             aria-hidden
@@ -132,8 +136,8 @@ export function PortfolioIndexClient() {
         activeSlug={activeCategorySlug}
       />
       <p className="mt-4 max-w-2xl text-lg text-zinc-400">
-        Work grouped by category — filter with the chips above. Covers and case
-        studies are managed from the dashboard when the API is connected.
+        Use the chips to filter by category. Covers and case studies are edited
+        in the dashboard (with the API running).
       </p>
 
       {filtered.length === 0 ? (
@@ -157,8 +161,8 @@ export function PortfolioIndexClient() {
 
       {showSampleNote ? (
         <p className="mt-10 max-w-2xl text-sm text-zinc-500">
-          Showing sample projects until your API returns entries or you publish
-          from the dashboard.
+          Sample projects only. Add real ones in the dashboard once the API is
+          connected.
         </p>
       ) : null}
     </>

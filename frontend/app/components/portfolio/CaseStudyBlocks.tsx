@@ -1,6 +1,28 @@
 import Image from "next/image";
+import type { CSSProperties, ReactNode } from "react";
 import type { CaseStudyBlock } from "@/lib/portfolioCaseStudies";
 import { mediaUrl } from "@/lib/api";
+
+function BlockFade({
+  index,
+  children,
+}: {
+  index: number;
+  children: ReactNode;
+}) {
+  return (
+    <div
+      className="card-fade-up"
+      style={
+        {
+          "--card-fade-delay": `${Math.min(index, 24) * 48}ms`,
+        } as CSSProperties
+      }
+    >
+      {children}
+    </div>
+  );
+}
 function parseYoutubeId(input: string): string | null {
   const t = input.trim();
   if (/^[\w-]{11}$/.test(t)) return t;
@@ -125,18 +147,25 @@ export function CaseStudyBlocks({ blocks }: { blocks: CaseStudyBlock[] }) {
       {blocks.map((block, i) => {
         if (block.type === "paragraph") {
           return (
-            <p
-              key={i}
-              className="text-base leading-relaxed text-zinc-400 [&_code]:rounded [&_code]:bg-white/10 [&_code]:px-1 [&_code]:py-0.5 [&_code]:text-sm [&_code]:text-zinc-300"
-            >
-              {block.text}
-            </p>
+            <BlockFade key={i} index={i}>
+              <p className="text-base leading-relaxed text-zinc-400 [&_code]:rounded [&_code]:bg-white/10 [&_code]:px-1 [&_code]:py-0.5 [&_code]:text-sm [&_code]:text-zinc-300">
+                {block.text}
+              </p>
+            </BlockFade>
           );
         }
         if (block.type === "image") {
-          return <ImageBlock key={i} block={block} />;
+          return (
+            <BlockFade key={i} index={i}>
+              <ImageBlock block={block} />
+            </BlockFade>
+          );
         }
-        return <VideoBlock key={i} block={block} />;
+        return (
+          <BlockFade key={i} index={i}>
+            <VideoBlock block={block} />
+          </BlockFade>
+        );
       })}
     </div>
   );

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { notFound } from "next/navigation";
 import { CaseStudyBlocks } from "@/app/components/portfolio/CaseStudyBlocks";
 import { fetchPortfolioProject, fetchPortfolioProjectSlugs, mediaUrl } from "@/lib/api";
@@ -64,7 +65,10 @@ export default async function PortfolioCaseStudyPage({
       <p className="mt-4 max-w-2xl text-lg text-white/75">{data.description}</p>
 
       {cover ? (
-        <div className="relative mt-8 aspect-[21/9] w-full max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-zinc-900">
+        <div
+          className="card-fade-up relative mt-8 aspect-[21/9] w-full max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-zinc-900"
+          style={{ "--card-fade-delay": "0ms" } as CSSProperties}
+        >
           <Image
             src={cover}
             alt=""

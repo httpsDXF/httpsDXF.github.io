@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { ExperimentCardPreview } from "@/app/components/experiments/ExperimentCardPreview";
 import { fetchExperiments, type Experiment } from "@/lib/api";
 import { siteUrl } from "../../config/site";
@@ -11,7 +12,7 @@ function isPlaceholderExperiments(list: Experiment[]): boolean {
 export const metadata: Metadata = {
   title: "Experiments",
   description:
-    "Experiments and work-in-progress by Yaw Appiah (httpsDXF) — app previews, robotics and mechatronics notes, CAD demos, and interactive 3D viewers.",
+    "Demos and in-progress work by Yaw Appiah (httpsDXF): 3D assets, app builds, robotics notes, and related uploads.",
   alternates: { canonical: `${siteUrl}/experiments` },
 };
 
@@ -19,7 +20,7 @@ const STATIC_INTRO = [
   {
     title: "3D viewer",
     description:
-      "Standalone demo for glTF and CAD-style assets: orbit controls and exploded views when you upload multi-part models.",
+      "Try orbit controls and lighting on a built-in model. Upload your own mesh from the dashboard to see it here.",
     href: "/experiments/view",
     cta: "Open viewer",
     variant: "viewer" as const,
@@ -36,16 +37,21 @@ export default async function ExperimentsPage() {
         Experiments
       </h1>
       <p className="mt-4 max-w-2xl text-lg text-white/70">
-        Prototypes, CAD viewers, and tooling — including sample GLB projects when the
-        API has no uploads yet.
+        Demos, models, and side projects. If nothing is uploaded yet, you&apos;ll
+        see sample GLB files until the API has your own entries.
       </p>
 
       <ul className="mt-12 grid gap-8 sm:grid-cols-2">
-        {STATIC_INTRO.map((item) => (
+        {STATIC_INTRO.map((item, i) => (
           <li key={item.href}>
             <Link
               href={item.href}
-              className="group block overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/40 shadow-sm transition hover:border-white/20 hover:bg-zinc-900/70"
+              className="card-fade-up group block overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/40 shadow-sm hover:border-white/20 hover:bg-zinc-900/70"
+              style={
+                {
+                  "--card-fade-delay": `${i * 48}ms`,
+                } as CSSProperties
+              }
             >
               <ExperimentCardPreview
                 previewUrl={null}
@@ -71,11 +77,16 @@ export default async function ExperimentsPage() {
             </Link>
           </li>
         ))}
-        {apiList.map((exp) => (
+        {apiList.map((exp, i) => (
           <li key={exp.slug}>
             <Link
               href={`/experiments/${exp.slug}`}
-              className="group block overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/40 shadow-sm transition hover:border-white/20 hover:bg-zinc-900/70"
+              className="card-fade-up group block overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/40 shadow-sm hover:border-white/20 hover:bg-zinc-900/70"
+              style={
+                {
+                  "--card-fade-delay": `${(STATIC_INTRO.length + i) * 48}ms`,
+                } as CSSProperties
+              }
             >
               <ExperimentCardPreview
                 previewUrl={exp.preview_image_url}
@@ -105,10 +116,9 @@ export default async function ExperimentsPage() {
 
       {showSampleNote ? (
         <p className="mt-10 max-w-2xl text-sm text-zinc-500">
-          Showing sample experiments (Khronos glTF demos) until your API returns
-          published entries or you upload from the dashboard. Use title and
-          description to label app previews, docs, or robotics work — the
-          interactive viewer applies when the asset is a 3D model.
+          Sample GLBs from the Khronos glTF sample set. Upload yours from the
+          dashboard when the API is live. Use the title and description fields
+          to explain what the entry is; the viewer below is for 3D files only.
         </p>
       ) : null}
     </div>

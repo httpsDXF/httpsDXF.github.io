@@ -6,7 +6,7 @@ import { siteUrl } from "../../config/site";
 export const metadata: Metadata = {
   title: "Portfolio",
   description:
-    "Engineering and software portfolio by Yaw Appiah (httpsDXF) — robotics, mechatronics, and creative projects.",
+    "Selected work by Yaw Appiah (httpsDXF): software, hardware, robotics, and related projects.",
   alternates: { canonical: `${siteUrl}/portfolio` },
 };
 

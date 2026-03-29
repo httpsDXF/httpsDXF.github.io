@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type CSSProperties } from "react";
 import { getApiBase, mediaUrl, type PortfolioProject } from "@/lib/api";
 import { authHeaders, clearTokens, getAccessToken } from "@/lib/auth";
 
@@ -78,9 +78,8 @@ export default function DashboardPortfolioProjectsPage() {
   return (
     <div className="pt-2">
       <p className="text-sm text-zinc-500">
-        Cover images appear on the portfolio grid. Edit case study content
-        (text, images, video blocks) in the JSON field on each project. Manage
-        filter chips under{" "}
+        Grid thumbnails use each project&apos;s cover. Case study body is edited
+        as JSON per project. Category labels (the public filter chips) are under{" "}
         <Link
           href="/dashboard/portfolio/categories"
           className="text-emerald-400/90 underline underline-offset-2 hover:text-emerald-300"
@@ -121,9 +120,16 @@ export default function DashboardPortfolioProjectsPage() {
           </p>
         ) : (
           <ul className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {projects.map((p) => (
+            {projects.map((p, i) => (
               <li key={p.slug}>
-                <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/40 shadow-sm shadow-black/20 transition hover:border-white/20 hover:bg-zinc-900/60">
+                <article
+                  className="card-fade-up flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/40 shadow-sm shadow-black/20 hover:border-white/20 hover:bg-zinc-900/60"
+                  style={
+                    {
+                      "--card-fade-delay": `${Math.min(i, 24) * 48}ms`,
+                    } as CSSProperties
+                  }
+                >
                   <Link
                     href={`/dashboard/portfolio/edit?slug=${encodeURIComponent(p.slug)}`}
                     className="group flex min-h-0 flex-1 flex-col focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50"

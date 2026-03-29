@@ -187,8 +187,8 @@ export default function PortfolioCategoriesDashboardPage() {
       </div>
 
       <p className="text-sm text-zinc-500">
-        Categories appear as filter chips on the public portfolio. Assign them
-        when creating or editing a project.
+        These names show up as filter chips on the public portfolio. Attach them
+        in each project&apos;s form.
       </p>
 
       <section className="mt-10">

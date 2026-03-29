@@ -2,10 +2,18 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { mainNavItems } from "../config/navigation";
 
+/** Current page matches this nav href (home is exact `/` only). */
+function isActiveNav(pathname: string, href: string): boolean {
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 export function SiteHeader() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -24,6 +32,7 @@ export function SiteHeader() {
           href="/"
           className="interaction-fast relative block h-10 w-11 shrink-0 opacity-95 hover:opacity-100 active:scale-[0.97] md:h-11 md:w-12"
           aria-label="Home"
+          aria-current={pathname === "/" ? "page" : undefined}
         >
           <Image
             src="/logo.svg"
@@ -38,18 +47,31 @@ export function SiteHeader() {
           className="hidden items-center gap-8 text-[15px] font-medium text-white/95 md:mt-2 md:flex"
           aria-label="Main"
         >
-          {mainNavItems.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className="interaction-fast text-white/95 hover:text-white/70"
-            >
-              {label}
-            </Link>
-          ))}
+          {mainNavItems.map(({ href, label }) => {
+            const active = isActiveNav(pathname, href);
+            return (
+              <Link
+                key={href}
+                href={href}
+                aria-current={active ? "page" : undefined}
+                className={`interaction-fast relative rounded-md px-1 py-0.5 transition-colors ${
+                  active
+                    ? "font-semibold text-white after:absolute after:inset-x-1 after:-bottom-1 after:h-0.5 after:rounded-full after:bg-white"
+                    : "text-white/75 hover:text-white"
+                }`}
+              >
+                {label}
+              </Link>
+            );
+          })}
           <Link
             href="/hire"
-            className="interaction-smooth rounded-md border border-white/20 bg-white/10 px-4 py-2 text-white hover:border-white/35 hover:bg-white/15 hover:scale-[1.02] active:scale-[0.98]"
+            aria-current={pathname === "/hire" ? "page" : undefined}
+            className={`interaction-smooth rounded-md border px-4 py-2 hover:scale-[1.02] active:scale-[0.98] ${
+              pathname === "/hire"
+                ? "border-white/45 bg-white/15 font-semibold text-white shadow-[0_0_0_1px_rgba(255,255,255,0.12)]"
+                : "border-white/20 bg-white/10 text-white hover:border-white/35 hover:bg-white/15"
+            }`}
           >
             Hire Me
           </Link>
@@ -115,19 +137,32 @@ export function SiteHeader() {
           aria-label="Mobile"
         >
           <div className="flex w-full max-w-xs flex-col items-stretch gap-1 px-4">
-            {mainNavItems.map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                className="mobile-nav-link interaction-fast block rounded-lg px-4 py-3 text-center text-lg font-medium text-white/95 hover:bg-white/10 active:scale-[0.99]"
-                onClick={() => setOpen(false)}
-              >
-                {label}
-              </Link>
-            ))}
+            {mainNavItems.map(({ href, label }) => {
+              const active = isActiveNav(pathname, href);
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  aria-current={active ? "page" : undefined}
+                  className={`mobile-nav-link interaction-fast block rounded-lg px-4 py-3 text-center text-lg font-medium active:scale-[0.99] ${
+                    active
+                      ? "bg-white/10 font-semibold text-white"
+                      : "text-white/90 hover:bg-white/10"
+                  }`}
+                  onClick={() => setOpen(false)}
+                >
+                  {label}
+                </Link>
+              );
+            })}
             <Link
               href="/hire"
-              className="mobile-nav-link interaction-smooth mt-2 block rounded-md border border-white/25 bg-white/10 px-4 py-3 text-center text-lg font-medium text-white hover:border-white/40 hover:bg-white/15 active:scale-[0.99]"
+              aria-current={pathname === "/hire" ? "page" : undefined}
+              className={`mobile-nav-link interaction-smooth mt-2 block rounded-md border px-4 py-3 text-center text-lg font-medium active:scale-[0.99] ${
+                pathname === "/hire"
+                  ? "border-white/45 bg-white/15 font-semibold text-white"
+                  : "border-white/25 bg-white/10 text-white hover:border-white/40 hover:bg-white/15"
+              }`}
               onClick={() => setOpen(false)}
             >
               Hire Me
