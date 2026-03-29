@@ -1,5 +1,6 @@
 "use client";
 
+import { BlogCoverImageField } from "@/app/components/blog/BlogCoverImageField";
 import { BlogEditor } from "@/app/components/blog/BlogEditor";
 
 export function BlogPostDraftForm({
@@ -19,6 +20,7 @@ export function BlogPostDraftForm({
   setPublished,
   coverFile,
   setCoverFile,
+  initialCoverUrl,
   mediaFiles,
   setMediaFiles,
   onSubmit,
@@ -41,6 +43,8 @@ export function BlogPostDraftForm({
   setPublished: (v: boolean) => void;
   coverFile: File | null;
   setCoverFile: (f: File | null) => void;
+  /** Existing cover when editing (API URL). */
+  initialCoverUrl?: string | null;
   mediaFiles: File[];
   setMediaFiles: (f: File[]) => void;
   onSubmit: (e: React.FormEvent) => void;
@@ -117,15 +121,11 @@ export function BlogPostDraftForm({
                 className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-white outline-none focus:border-white/35"
               />
             </label>
-            <label className="flex flex-col gap-1 text-sm">
-              <span className="text-zinc-500">Cover image (optional)</span>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setCoverFile(e.target.files?.[0] ?? null)}
-                className="text-sm text-zinc-300 file:mr-3 file:rounded-md file:border-0 file:bg-white/10 file:px-3 file:py-1.5 file:text-white"
-              />
-            </label>
+            <BlogCoverImageField
+              coverFile={coverFile}
+              onCoverFileChange={setCoverFile}
+              initialCoverUrl={initialCoverUrl}
+            />
             <label className="flex flex-col gap-1 text-sm">
               <span className="text-zinc-500">
                 Gallery — images & videos (optional)

@@ -1,3 +1,9 @@
+import {
+  PLACEHOLDER_BLOG_POSTS,
+  PLACEHOLDER_BLOG_SLUGS,
+  getPlaceholderPostBySlug,
+} from "@/lib/placeholderContent";
+
 /** Base URL for Django API (no trailing slash). */
 export function getApiBase(): string {
   return (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/$/, "");
@@ -53,18 +59,22 @@ export type Experiment = {
 
 export async function fetchBlogPosts(): Promise<BlogPost[]> {
   const base = getApiBase();
-  if (!base) return [];
+  if (!base) return [...PLACEHOLDER_BLOG_POSTS] as unknown as BlogPost[];
   const r = await fetch(`${base}/api/blog/posts/`, cacheInit());
-  if (!r.ok) return [];
-  return r.json();
+  if (!r.ok) return [...PLACEHOLDER_BLOG_POSTS] as unknown as BlogPost[];
+  const posts: BlogPost[] = await r.json();
+  if (!posts.length) return [...PLACEHOLDER_BLOG_POSTS] as unknown as BlogPost[];
+  return posts;
 }
 
 export async function fetchBlogPost(slug: string): Promise<BlogPost | null> {
   const base = getApiBase();
-  if (!base) return null;
-  const r = await fetch(`${base}/api/blog/posts/${slug}/`, cacheInit());
-  if (!r.ok) return null;
-  return r.json();
+  if (base) {
+    const r = await fetch(`${base}/api/blog/posts/${slug}/`, cacheInit());
+    if (r.ok) return (await r.json()) as BlogPost;
+  }
+  const fallback = getPlaceholderPostBySlug(slug);
+  return fallback ? ({ ...fallback } as unknown as BlogPost) : null;
 }
 
 export async function fetchExperiments(): Promise<Experiment[]> {
@@ -89,6 +99,12 @@ export async function fetchExperimentSlugs(): Promise<string[]> {
 }
 
 export async function fetchBlogSlugs(): Promise<string[]> {
-  const list = await fetchBlogPosts();
-  return list.map((p) => p.slug);
+  const base = getApiBase();
+  if (!base) return [...PLACEHOLDER_BLOG_SLUGS];
+  const r = await fetch(`${base}/api/blog/posts/`, cacheInit());
+  if (!r.ok) return [...PLACEHOLDER_BLOG_SLUGS];
+  const list: BlogPost[] = await r.json();
+  const fromApi = list.map((p) => p.slug);
+  if (!fromApi.length) return [...PLACEHOLDER_BLOG_SLUGS];
+  return Array.from(new Set([...fromApi, ...PLACEHOLDER_BLOG_SLUGS]));
 }

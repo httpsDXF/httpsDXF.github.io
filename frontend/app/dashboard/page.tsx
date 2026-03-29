@@ -33,7 +33,7 @@ export default function DashboardHomePage() {
         Manage published writing and 3D experiments. Use the sidebar to switch
         between sections.
       </p>
-      <ul className="mt-10 grid gap-4 sm:grid-cols-2">
+      <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <li>
           <Link
             href="/dashboard/blog"
@@ -48,6 +48,14 @@ export default function DashboardHomePage() {
             className="block rounded-xl border border-white/10 bg-white/[0.04] px-5 py-4 text-base font-medium text-white transition hover:border-white/20 hover:bg-white/[0.07]"
           >
             Experiments
+          </Link>
+        </li>
+        <li>
+          <Link
+            href="/dashboard/portfolio"
+            className="block rounded-xl border border-white/10 bg-white/[0.04] px-5 py-4 text-base font-medium text-white transition hover:border-white/20 hover:bg-white/[0.07]"
+          >
+            Portfolio categories
           </Link>
         </li>
       </ul>

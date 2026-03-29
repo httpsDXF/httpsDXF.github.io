@@ -206,6 +206,7 @@ function EditBlogPostInner() {
         setPublished={setPublished}
         coverFile={coverFile}
         setCoverFile={setCoverFile}
+        initialCoverUrl={post.cover_image_url}
         mediaFiles={mediaFiles}
         setMediaFiles={setMediaFiles}
         onSubmit={save}

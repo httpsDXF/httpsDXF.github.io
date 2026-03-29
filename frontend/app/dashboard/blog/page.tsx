@@ -4,23 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { BlogPostDraftForm } from "@/app/components/blog/BlogPostDraftForm";
 import { getApiBase, mediaUrl, type BlogPost } from "@/lib/api";
 import { authHeaders, clearTokens, getAccessToken } from "@/lib/auth";
-import { slugify } from "@/lib/slug";
 
 export default function DashboardBlogPage() {
   const router = useRouter();
   const base = getApiBase();
   const [posts, setPosts] = useState<BlogPost[]>([]);
-  const [title, setTitle] = useState("");
-  const [slug, setSlug] = useState("");
-  const [description, setDescription] = useState("");
-  const [bodyHtml, setBodyHtml] = useState("");
-  const [editorKey, setEditorKey] = useState(0);
-  const [published, setPublished] = useState(true);
-  const [coverFile, setCoverFile] = useState<File | null>(null);
-  const [mediaFiles, setMediaFiles] = useState<File[]>([]);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [deletingSlug, setDeletingSlug] = useState<string | null>(null);
@@ -45,61 +35,6 @@ export default function DashboardBlogPage() {
     const id = window.setTimeout(() => void load(), 0);
     return () => window.clearTimeout(id);
   }, [router, load]);
-
-  async function create(e: React.FormEvent) {
-    e.preventDefault();
-    setMsg(null);
-    setErr(null);
-    if (!base) {
-      setErr("Missing NEXT_PUBLIC_API_URL.");
-      return;
-    }
-    const textLen = bodyHtml
-      .replace(/<[^>]+>/g, " ")
-      .replace(/\s+/g, " ")
-      .trim().length;
-    if (textLen < 12) {
-      setErr("Add more to the story body — text, headings, or images.");
-      return;
-    }
-    const fd = new FormData();
-    fd.append("title", title);
-    fd.append("slug", slug || slugify(title));
-    fd.append("description", description);
-    fd.append("body", bodyHtml);
-    fd.append("body_format", "html");
-    fd.append("published", published ? "true" : "false");
-    if (coverFile) fd.append("cover_image", coverFile);
-    for (const f of mediaFiles) {
-      fd.append("media", f);
-    }
-
-    const r = await fetch(`${base}/api/blog/posts/`, {
-      method: "POST",
-      headers: authHeaders(),
-      body: fd,
-    });
-    if (r.status === 401) {
-      clearTokens();
-      router.replace("/dashboard/login");
-      return;
-    }
-    if (!r.ok) {
-      const j = (await r.json().catch(() => ({}))) as Record<string, unknown>;
-      setErr(JSON.stringify(j));
-      return;
-    }
-    setMsg("Post created.");
-    setTitle("");
-    setSlug("");
-    setDescription("");
-    setBodyHtml("");
-    setEditorKey((k) => k + 1);
-    setPublished(true);
-    setCoverFile(null);
-    setMediaFiles([]);
-    void load();
-  }
 
   async function deletePost(slug: string, title: string) {
     if (!base) return;
@@ -142,10 +77,25 @@ export default function DashboardBlogPage() {
       </p>
 
       <section className="mt-10">
-        <h2 className="text-lg font-semibold text-white">All posts</h2>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <h2 className="text-lg font-semibold text-white">All posts</h2>
+          <Link
+            href="/dashboard/blog/new"
+            className="interaction-smooth shrink-0 rounded-full border border-emerald-600/50 bg-emerald-600/25 px-5 py-2 text-sm font-medium text-emerald-100 hover:bg-emerald-600/35"
+          >
+            Create new
+          </Link>
+        </div>
         {posts.length === 0 ? (
           <p className="mt-4 rounded-2xl border border-dashed border-white/15 bg-white/[0.02] px-6 py-12 text-center text-sm text-zinc-500">
-            No posts yet. Compose a new story below.
+            No posts yet. Use{" "}
+            <Link
+              href="/dashboard/blog/new"
+              className="text-emerald-400/90 underline underline-offset-2 hover:text-emerald-300"
+            >
+              Create new
+            </Link>{" "}
+            to write your first story.
           </p>
         ) : (
           <ul className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -228,37 +178,14 @@ export default function DashboardBlogPage() {
         )}
       </section>
 
-      <section className="mt-16 border-t border-white/10 pt-12">
-        <h2 className="text-lg font-semibold text-white">New story</h2>
-        <p className="mt-1 text-sm text-zinc-500">
-          Start a draft; publish when you are ready.
+      {err ? (
+        <p className="mt-6 text-sm text-red-400/90" role="alert">
+          {err}
         </p>
-        <div className="mt-8">
-          <BlogPostDraftForm
-            stickyHeading="New story"
-            stickyBadge="Draft"
-            submitLabel="Publish"
-            editorMountKey={editorKey}
-            initialHtml=""
-            title={title}
-            setTitle={setTitle}
-            slug={slug}
-            setSlug={setSlug}
-            description={description}
-            setDescription={setDescription}
-            setBodyHtml={setBodyHtml}
-            published={published}
-            setPublished={setPublished}
-            coverFile={coverFile}
-            setCoverFile={setCoverFile}
-            mediaFiles={mediaFiles}
-            setMediaFiles={setMediaFiles}
-            onSubmit={create}
-            err={err}
-            msg={msg}
-          />
-        </div>
-      </section>
+      ) : null}
+      {msg ? (
+        <p className="mt-6 text-sm text-emerald-400/90">{msg}</p>
+      ) : null}
     </div>
   );
 }

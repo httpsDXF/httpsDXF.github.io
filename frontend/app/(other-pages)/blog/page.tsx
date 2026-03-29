@@ -4,6 +4,10 @@ import { BlogCardPreview } from "@/app/components/blog/BlogCardPreview";
 import { fetchBlogPosts } from "@/lib/api";
 import { siteUrl } from "../../config/site";
 
+function isPlaceholderPreview(posts: { id: number }[]): boolean {
+  return posts.length > 0 && posts[0].id < 0;
+}
+
 export const metadata: Metadata = {
   title: "Blog",
   description:
@@ -21,6 +25,12 @@ export default async function BlogPage() {
         Notes on engineering, robotics, and STEAM. New posts appear here when
         published from the dashboard.
       </p>
+      {isPlaceholderPreview(posts) ? (
+        <p className="mt-4 max-w-2xl text-sm text-zinc-500">
+          Showing sample posts until your API returns published posts or you publish
+          from the dashboard.
+        </p>
+      ) : null}
 
       {posts.length === 0 ? (
         <p className="mt-10 text-zinc-500">

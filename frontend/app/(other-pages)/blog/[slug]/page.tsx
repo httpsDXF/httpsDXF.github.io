@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PLACEHOLDER_BLOG_SLUGS } from "@/lib/placeholderContent";
 import { fetchBlogSlugs } from "@/lib/api";
 import { siteUrl } from "../../../config/site";
 import { BlogPostClient } from "./BlogPostClient";
@@ -12,7 +13,7 @@ export async function generateStaticParams() {
   } catch {
     /* ignore */
   }
-  return [{ slug: "offline" }];
+  return PLACEHOLDER_BLOG_SLUGS.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({

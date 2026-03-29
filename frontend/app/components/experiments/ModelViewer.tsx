@@ -190,11 +190,11 @@ function localFilePreview(file: File | null): {
 
 export function ModelViewer(props: {
   modelUrl: string | null;
-  localFile: File | null;
+  localFile?: File | null;
   className?: string;
 }) {
   const localPreview = useMemo(
-    () => localFilePreview(props.localFile),
+    () => localFilePreview(props.localFile ?? null),
     [props.localFile],
   );
 
