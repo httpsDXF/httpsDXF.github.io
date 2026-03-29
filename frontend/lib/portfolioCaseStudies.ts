@@ -54,8 +54,7 @@ const CASE_STUDY_SECTIONS: Record<string, CaseStudySectionInput[]> = {
           type: "image",
           src: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=1200&q=80",
           alt: "Lab bench and tooling",
-          caption:
-            "Example inline image — in the dashboard, add image blocks inside case study JSON.",
+          caption: "Early bench layout before the final harness pass.",
         },
         {
           type: "paragraph",
@@ -73,8 +72,7 @@ const CASE_STUDY_SECTIONS: Record<string, CaseStudySectionInput[]> = {
         {
           type: "video",
           youtube: "M7lc1UVf-SE",
-          caption:
-            "Example YouTube embed — replace with your demo reel or walkthrough.",
+          caption: "Short clip from bring-up—audio optional.",
         },
         {
           type: "paragraph",
@@ -165,8 +163,7 @@ const CASE_STUDY_SECTIONS: Record<string, CaseStudySectionInput[]> = {
           type: "video",
           fileUrl:
             "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-          caption:
-            "Example file embed (HTML5 video) — replace with your own hosted clip.",
+          caption: "Motion study clip—hosted file embed.",
         },
       ],
     },
@@ -262,7 +259,7 @@ export function getPortfolioCaseStudy(slug: string): {
       {
         heading: "More detail",
         paragraphs: [
-          "Replace this placeholder with your real case study: constraints, process, images, and what you would do next.",
+          "More depth—constraints, process, and what changed between revisions—can sit in the extended write-up for this project.",
         ],
       },
     ] satisfies CaseStudySectionInput[]);

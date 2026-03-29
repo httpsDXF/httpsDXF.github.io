@@ -39,7 +39,7 @@ export function BlogPostClient({ slug }: { slug: string }) {
         </p>
         <h1 className="mt-4 text-2xl font-semibold">Post not found</h1>
         <p className="mt-2 text-zinc-400">
-          This post may not exist or the API is offline.
+          This post isn’t here—it may have moved or been removed.
         </p>
       </div>
     );

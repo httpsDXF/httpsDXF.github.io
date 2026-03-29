@@ -196,14 +196,11 @@ export function PortfolioProjectForm({
           <label className="flex flex-col gap-2 text-sm">
             <span className="font-medium text-zinc-500">Case study (JSON)</span>
             <p className="text-xs text-zinc-600">
-              Top level: array of sections. Each section has{" "}
-              <code className="text-zinc-500">heading</code> and{" "}
-              <code className="text-zinc-500">blocks</code>. Block{" "}
-              <code className="text-zinc-500">type</code>s:{" "}
+              Array of sections with <code className="text-zinc-500">heading</code>{" "}
+              and <code className="text-zinc-500">blocks</code>. Types:{" "}
               <code className="text-zinc-500">paragraph</code>,{" "}
               <code className="text-zinc-500">image</code>,{" "}
-              <code className="text-zinc-500">video</code> (YouTube, Vimeo, or
-              file URL).
+              <code className="text-zinc-500">video</code>.
             </p>
             <textarea
               value={caseStudyJson}

@@ -69,8 +69,8 @@ export function ExperimentDetailClient({ slug }: { slug: string }) {
         <h1 className="mt-4 text-2xl font-semibold">Experiment</h1>
         <p className="mt-4 text-zinc-400">
           {err === "not found"
-            ? "This experiment is not available (or the API is offline). Try the demo viewer."
-            : "Could not load experiment data."}
+            ? "This experiment isn’t available right now. You can still open the 3D viewer."
+            : "Couldn’t load this experiment."}
         </p>
         <Link
           href="/experiments/view"
@@ -96,17 +96,13 @@ export function ExperimentDetailClient({ slug }: { slug: string }) {
       </h1>
       {exp.id < 0 ? (
         <p className="mt-3 text-xs font-medium uppercase tracking-wider text-zinc-500">
-          Sample experiment · offline preview
+          Demo model
         </p>
       ) : null}
       {exp.description ? (
         <p className="mt-4 text-lg text-white/70">{exp.description}</p>
       ) : null}
       <p className="mt-2 text-xs text-zinc-500">Format: {exp.source_format}</p>
-      <p className="mt-6 text-sm text-zinc-500">
-        Model viewer. The text above is the right place for context (what it is,
-        how you built it, links).
-      </p>
       {exp.preview_image_url ? (
         <div
           className="card-fade-up relative mt-8 aspect-[21/9] w-full max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-zinc-900"

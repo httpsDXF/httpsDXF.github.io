@@ -20,13 +20,13 @@ function filterPostsByCategory(
 type Props = {
   postsAll: BlogPost[];
   categories: BlogCategory[];
-  showPlaceholderNote: boolean;
+  showPreviewNote: boolean;
 };
 
 export function BlogIndexClient({
   postsAll,
   categories,
-  showPlaceholderNote,
+  showPreviewNote,
 }: Props) {
   const searchParams = useSearchParams();
   const activeCategorySlug =
@@ -43,13 +43,12 @@ export function BlogIndexClient({
         activeSlug={activeCategorySlug}
       />
       <p className="mt-4 max-w-2xl text-lg text-white/70">
-        Writing on engineering and robotics. New posts go live here after you
-        publish them in the dashboard.
+        Notes on engineering, robotics, and the work in between—build logs,
+        sketches, and longer essays.
       </p>
-      {showPlaceholderNote ? (
+      {showPreviewNote ? (
         <p className="mt-4 max-w-2xl text-sm text-zinc-500">
-          These are sample posts. Replace them by connecting your API and
-          publishing real posts from the dashboard.
+          Showing a curated preview—new work will appear here as it goes live.
         </p>
       ) : null}
 
@@ -57,7 +56,7 @@ export function BlogIndexClient({
         <p className="mt-10 text-zinc-500">
           {activeCategorySlug
             ? "No posts in this category."
-            : "No posts yet. Point NEXT_PUBLIC_API_URL at your backend and publish from the dashboard."}
+            : "Nothing published here yet."}
         </p>
       ) : (
         <ul className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">

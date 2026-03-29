@@ -49,7 +49,7 @@ function PortfolioGridCard({
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-zinc-800/90 text-xs text-zinc-500">
-            No cover
+            No image
           </div>
         )}
       </div>
@@ -136,8 +136,8 @@ export function PortfolioIndexClient() {
         activeSlug={activeCategorySlug}
       />
       <p className="mt-4 max-w-2xl text-lg text-zinc-400">
-        Use the chips to filter by category. Covers and case studies are edited
-        in the dashboard (with the API running).
+        Filter by category. Each card opens a case study with images, video, and
+        long-form detail.
       </p>
 
       {filtered.length === 0 ? (
@@ -161,8 +161,7 @@ export function PortfolioIndexClient() {
 
       {showSampleNote ? (
         <p className="mt-10 max-w-2xl text-sm text-zinc-500">
-          Sample projects only. Add real ones in the dashboard once the API is
-          connected.
+          Preview projects—published work will replace this grid as it goes live.
         </p>
       ) : null}
     </>

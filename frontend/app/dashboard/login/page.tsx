@@ -18,7 +18,7 @@ export default function DashboardLoginPage() {
     setError(null);
     const base = getApiBase();
     if (!base) {
-      setError("Set NEXT_PUBLIC_API_URL in .env.local (e.g. http://127.0.0.1:8000).");
+      setError("The API server URL isn’t configured for this build.");
       return;
     }
     setPending(true);
@@ -41,7 +41,7 @@ export default function DashboardLoginPage() {
       router.replace("/dashboard");
       router.refresh();
     } catch {
-      setError("Network error — is the Django server running?");
+      setError("Couldn’t reach the server. Check that it’s running and try again.");
     } finally {
       setPending(false);
     }
@@ -56,7 +56,7 @@ export default function DashboardLoginPage() {
       </p>
       <h1 className="mt-6 text-2xl font-bold tracking-tight">Dashboard login</h1>
       <p className="mt-2 text-sm text-zinc-400">
-        Staff-only JWT login against your Django API.
+        Staff sign-in for editing blog posts, portfolio, and experiments.
       </p>
       <form onSubmit={onSubmit} className="mt-8 flex flex-col gap-4">
         <label className="flex flex-col gap-1 text-sm">

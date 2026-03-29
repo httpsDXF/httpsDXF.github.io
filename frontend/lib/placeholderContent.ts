@@ -1,4 +1,4 @@
-/** Shown when the API has no category list (offline build). */
+/** Fallback categories when the server returns none. */
 export const PLACEHOLDER_BLOG_CATEGORIES = [
   { id: -1, name: "Notes", slug: "notes", order: 0 },
   { id: -2, name: "Engineering", slug: "engineering", order: 1 },
@@ -6,7 +6,7 @@ export const PLACEHOLDER_BLOG_CATEGORIES = [
   { id: -4, name: "Process", slug: "process", order: 3 },
 ];
 
-/** Shown when the API is offline or returns no posts (static GitHub Pages builds). */
+/** Fallback slugs for static builds when the server is unavailable. */
 export const PLACEHOLDER_BLOG_SLUGS = [
   "welcome-notes",
   "mechatronics-sketch",
@@ -22,8 +22,8 @@ export const PLACEHOLDER_BLOG_POSTS = [
     slug: "welcome-notes",
     description:
       "A short hello and how this space will grow: engineering notes, experiments, and STEAM threads.",
-    body: `<p>This is placeholder content so the blog looks alive before your API is connected or before you publish real posts from the dashboard.</p>
-<p>Replace it anytime: new posts from the dashboard override the list when your backend returns published entries.</p>
+    body: `<p>This site is a working notebook: software, hardware, and the messy middle where they meet.</p>
+<p>Expect build logs, tooling notes, and the occasional essay on identity and craft.</p>
 <h2>What to expect</h2>
 <ul><li>Robotics and mechatronics breakdowns</li><li>Tooling and workflow notes</li><li>Occasional brand and photo essays</li></ul>`,
     body_format: "html",
@@ -44,9 +44,9 @@ export const PLACEHOLDER_BLOG_POSTS = [
     slug: "mechatronics-sketch",
     description:
       "Scribbles from a weekend actuator test: gearing assumptions, safety margins, and what broke first.",
-    body: `<p>Placeholder article body. Imagine step-by-step photos of a test rig, torque curves, and a honest “what we’d do differently” list.</p>
+    body: `<p>Weekend rig time: a simple bracket, a motor that ran hotter than expected, and a log of what we’d change on the next pass.</p>
 <blockquote><p>Measure twice, simulate once, then measure again.</p></blockquote>
-<p>Your real post can use the rich editor: images, video, YouTube embeds, code blocks, and dividers.</p>`,
+<p>Longer posts can carry step photos, curves, and an honest “what we’d do differently” list.</p>`,
     body_format: "html",
     published: true,
     cover_image_url:
@@ -65,8 +65,8 @@ export const PLACEHOLDER_BLOG_POSTS = [
     slug: "visual-identity-sprint",
     description:
       "A one-week pass at hierarchy, spacing, and motion rules for a personal studio site.",
-    body: `<p>Placeholder narrative for a brand-focused post: mood boards, type pairing, and exportable tokens.</p>
-<p>Swap this content for case-study copy when you are ready; the layout already supports long-form HTML from the editor.</p>`,
+    body: `<p>A tight sprint on hierarchy, spacing, and motion: mood boards, type pairing, and tokens that survive light and dark UI.</p>
+<p>The goal was an editorial surface—calm rhythm, predictable spacing, type that scales from phone to desktop.</p>`,
     body_format: "html",
     published: true,
     cover_image_url:
@@ -85,7 +85,7 @@ export function getPlaceholderPostBySlug(slug: string) {
   return PLACEHOLDER_BLOG_POSTS.find((p) => p.slug === slug) ?? null;
 }
 
-/** Khronos glTF sample models — used when the API has no experiments (static / offline). */
+/** Khronos glTF sample models — shown when the server has no experiments yet. */
 const GLTF_SAMPLE_BASE =
   "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0";
 
@@ -98,10 +98,10 @@ export const PLACEHOLDER_EXPERIMENT_SLUGS = [
 export const PLACEHOLDER_EXPERIMENTS = [
   {
     id: -1,
-    title: "Bracket export — sample GLB",
+    title: "Bracket export — GLB",
     slug: "prototype-bracket-glb",
     description:
-      "Placeholder experiment: simple Box mesh from the Khronos sample repo. Use orbit controls and try explode on multi-part GLBs you upload later.",
+      "A minimal Box mesh from the Khronos glTF sample set—handy for testing orbit, lighting, and materials before swapping in your own CAD export.",
     preview_image_url:
       "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=800&q=80",
     model_url: `${GLTF_SAMPLE_BASE}/Box/glTF-Binary/Box.glb`,
@@ -111,10 +111,10 @@ export const PLACEHOLDER_EXPERIMENTS = [
   },
   {
     id: -2,
-    title: "Classic duck mesh — sample",
+    title: "Classic duck mesh",
     slug: "sample-mechanical-duck",
     description:
-      "Placeholder: the Khronos Duck GLB — same family of asset the standalone viewer uses as a default. Swap for your CAD export from the dashboard.",
+      "The well-known Duck GLB—same family of asset the in-browser viewer loads by default. A friendly baseline for framing and scale checks.",
     preview_image_url:
       "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80",
     model_url: `${GLTF_SAMPLE_BASE}/Duck/glTF-Binary/Duck.glb`,
@@ -124,10 +124,10 @@ export const PLACEHOLDER_EXPERIMENTS = [
   },
   {
     id: -3,
-    title: "Fox model — sample GLB",
+    title: "Fox model",
     slug: "sample-fox-mesh",
     description:
-      "Placeholder: Fox glTF from Khronos samples — a slightly richer mesh for testing framing and materials before you publish your own models.",
+      "A slightly richer glTF from the Khronos samples—useful for testing skinning, materials, and camera framing before publishing your own work.",
     preview_image_url:
       "https://images.unsplash.com/photo-1507146426996-ef05306b995a?w=800&q=80",
     model_url: `${GLTF_SAMPLE_BASE}/Fox/glTF-Binary/Fox.glb`,
@@ -141,7 +141,7 @@ export function getPlaceholderExperimentBySlug(slug: string) {
   return PLACEHOLDER_EXPERIMENTS.find((e) => e.slug === slug) ?? null;
 }
 
-/** When the API has no portfolio categories (static / offline). */
+/** When the server returns no portfolio categories. */
 export const PLACEHOLDER_PORTFOLIO_CATEGORIES = [
   { id: -1, name: "Mechatronics", slug: "mechatronics", order: 0 },
   { id: -2, name: "Brand", slug: "brand", order: 1 },
@@ -158,7 +158,7 @@ export type PortfolioCard = {
   cover_image_url?: string;
 };
 
-/** Default category sections — extra dashboard categories have no cards until you add CMS data. */
+/** Default cards by category when the server has no projects yet. */
 export const PORTFOLIO_PLACEHOLDER_CARDS: Record<string, PortfolioCard[]> = {
   Mechatronics: [
     {
@@ -223,7 +223,7 @@ export const PORTFOLIO_PLACEHOLDER_CARDS: Record<string, PortfolioCard[]> = {
       slug: "low-light-street-set",
       title: "Low-light street set",
       description:
-        "A study in contrast and shutter discipline — placeholder series until galleries go live.",
+        "Contrast, shutter discipline, and silhouettes that stay legible after dark.",
       meta: "Series · Urban",
       cover_image_url:
         "https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=1200&q=80",
@@ -241,7 +241,7 @@ export const PORTFOLIO_PLACEHOLDER_CARDS: Record<string, PortfolioCard[]> = {
       slug: "travel-log-selects",
       title: "Travel log (selects)",
       description:
-        "Curated frames from recent travel; captions and print sizes TBD.",
+        "A tight edit from recent travel—frames that read at postcard scale and reward a second look.",
       meta: "Editorial",
       cover_image_url:
         "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1200&q=80",

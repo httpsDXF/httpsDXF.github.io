@@ -59,7 +59,7 @@ export default async function PortfolioCaseStudyPage({
       </h1>
       {data.id < 0 ? (
         <p className="mt-3 text-xs font-medium uppercase tracking-wider text-zinc-500">
-          Sample project · offline preview
+          Case study preview
         </p>
       ) : null}
       <p className="mt-4 max-w-2xl text-lg text-white/75">{data.description}</p>

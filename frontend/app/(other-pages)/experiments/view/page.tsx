@@ -28,8 +28,8 @@ export default function ExperimentsViewPage() {
         3D viewer
       </h1>
       <p className="mt-2 max-w-xl text-sm text-zinc-500">
-        Orbit and lighting on a default mesh. List other work (apps, write-ups,
-        etc.) on the main experiments page; upload models from the dashboard.
+        Drag in a file or load the default mesh. Browse the rest of the work on
+        the main experiments page.
       </p>
 
       <ModelViewer modelUrl={null} localFile={null} className="mt-8" />

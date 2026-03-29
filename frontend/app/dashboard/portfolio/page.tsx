@@ -78,15 +78,14 @@ export default function DashboardPortfolioProjectsPage() {
   return (
     <div className="pt-2">
       <p className="text-sm text-zinc-500">
-        Grid thumbnails use each project&apos;s cover. Case study body is edited
-        as JSON per project. Category labels (the public filter chips) are under{" "}
+        Covers power the grid; case studies are edited per project.{" "}
         <Link
           href="/dashboard/portfolio/categories"
           className="text-emerald-400/90 underline underline-offset-2 hover:text-emerald-300"
         >
-          Portfolio categories
-        </Link>
-        .
+          Categories
+        </Link>{" "}
+        control the public filters.
       </p>
 
       <section className="mt-10">
@@ -109,14 +108,13 @@ export default function DashboardPortfolioProjectsPage() {
         </div>
         {projects.length === 0 ? (
           <p className="mt-4 rounded-2xl border border-dashed border-white/15 bg-white/[0.02] px-6 py-12 text-center text-sm text-zinc-500">
-            No projects yet. Use{" "}
+            No projects yet.{" "}
             <Link
               href="/dashboard/portfolio/new"
               className="text-emerald-400/90 underline underline-offset-2 hover:text-emerald-300"
             >
               New project
-            </Link>{" "}
-            to add your first case study.
+            </Link>
           </p>
         ) : (
           <ul className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -146,7 +144,7 @@ export default function DashboardPortfolioProjectsPage() {
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center bg-zinc-800/90 text-xs text-zinc-500">
-                          No cover
+                          No image
                         </div>
                       )}
                       <div className="absolute left-3 top-3">

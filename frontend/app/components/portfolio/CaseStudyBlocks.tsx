@@ -85,10 +85,7 @@ function VideoBlock({
   if (n !== 1) {
     return (
       <p className="text-sm text-amber-200/80">
-        Invalid video block: set exactly one of{" "}
-        <code className="text-zinc-400">youtube</code>,{" "}
-        <code className="text-zinc-400">vimeo</code>, or{" "}
-        <code className="text-zinc-400">fileUrl</code>.
+        Video block needs a single source: YouTube, Vimeo, or a file URL.
       </p>
     );
   }

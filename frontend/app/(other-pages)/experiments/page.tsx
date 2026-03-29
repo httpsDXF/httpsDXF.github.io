@@ -20,7 +20,7 @@ const STATIC_INTRO = [
   {
     title: "3D viewer",
     description:
-      "Try orbit controls and lighting on a built-in model. Upload your own mesh from the dashboard to see it here.",
+      "Open a model in the browser—orbit, pan, and inspect lighting on your own glTF, GLB, STL, or OBJ files.",
     href: "/experiments/view",
     cta: "Open viewer",
     variant: "viewer" as const,
@@ -37,8 +37,8 @@ export default async function ExperimentsPage() {
         Experiments
       </h1>
       <p className="mt-4 max-w-2xl text-lg text-white/70">
-        Demos, models, and side projects. If nothing is uploaded yet, you&apos;ll
-        see sample GLB files until the API has your own entries.
+        Demos, models, and side projects—each entry opens a detail page with a
+        3D viewer when a model is attached.
       </p>
 
       <ul className="mt-12 grid gap-8 sm:grid-cols-2">
@@ -116,9 +116,8 @@ export default async function ExperimentsPage() {
 
       {showSampleNote ? (
         <p className="mt-10 max-w-2xl text-sm text-zinc-500">
-          Sample GLBs from the Khronos glTF sample set. Upload yours from the
-          dashboard when the API is live. Use the title and description fields
-          to explain what the entry is; the viewer below is for 3D files only.
+          The entries below use glTF sample models from Khronos—handy for
+          checking the viewer. Your own uploads will list here when published.
         </p>
       ) : null}
     </div>

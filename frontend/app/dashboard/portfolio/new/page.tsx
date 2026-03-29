@@ -77,7 +77,7 @@ export default function DashboardNewPortfolioProjectPage() {
     setMsg(null);
     setErr(null);
     if (!base) {
-      setErr("Missing NEXT_PUBLIC_API_URL.");
+      setErr("The API server URL isn’t configured.");
       return;
     }
     const parsed = parseCaseStudyPayload(caseStudyJson);

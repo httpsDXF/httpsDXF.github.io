@@ -30,15 +30,14 @@ export default function DashboardHomePage() {
     <div>
       <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Overview</h1>
       <p className="mt-2 max-w-lg text-sm text-zinc-400">
-        Edit the blog, portfolio, and experiments. Use the sidebar to move
-        between sections.
+        Blog, portfolio, and experiments—open a section to edit.
       </p>
       <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {(
           [
-            { href: "/dashboard/blog", label: "Blog posts" },
+            { href: "/dashboard/blog", label: "Blog" },
             { href: "/dashboard/experiments", label: "Experiments" },
-            { href: "/dashboard/portfolio", label: "Portfolio categories" },
+            { href: "/dashboard/portfolio", label: "Portfolio" },
           ] as const
         ).map((item, i) => (
           <li key={item.href}>

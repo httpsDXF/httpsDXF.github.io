@@ -71,9 +71,8 @@ export default function DashboardBlogPage() {
   return (
     <div className="pt-2">
       <p className="text-sm text-zinc-500">
-        Click a card to edit. In the editor, use the{" "}
-        <span className="text-zinc-400">+</span> next to a blank line to insert
-        media, embeds, or a divider.
+        Open a post to edit. Use <span className="text-zinc-400">+</span> on a
+        line for media, embeds, or a divider.
       </p>
 
       <section className="mt-10">
@@ -88,14 +87,13 @@ export default function DashboardBlogPage() {
         </div>
         {posts.length === 0 ? (
           <p className="mt-4 rounded-2xl border border-dashed border-white/15 bg-white/[0.02] px-6 py-12 text-center text-sm text-zinc-500">
-            No posts yet. Use{" "}
+            No posts yet.{" "}
             <Link
               href="/dashboard/blog/new"
               className="text-emerald-400/90 underline underline-offset-2 hover:text-emerald-300"
             >
-              Create new
-            </Link>{" "}
-            to write your first story.
+              Create a post
+            </Link>
           </p>
         ) : (
           <ul className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -125,7 +123,7 @@ export default function DashboardBlogPage() {
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center bg-zinc-800/90 text-xs text-zinc-500">
-                          No cover
+                          No image
                         </div>
                       )}
                       <div className="absolute left-3 top-3">

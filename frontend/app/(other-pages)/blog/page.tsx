@@ -4,7 +4,7 @@ import { BlogIndexClient } from "./BlogIndexClient";
 import { fetchBlogCategories, fetchBlogPosts } from "@/lib/api";
 import { siteUrl } from "../../config/site";
 
-function isPlaceholderPreview(posts: { id: number }[]): boolean {
+function isPreviewContent(posts: { id: number }[]): boolean {
   return posts.length > 0 && posts[0].id < 0;
 }
 
@@ -34,7 +34,7 @@ export default async function BlogPage() {
         <BlogIndexClient
           postsAll={postsAll}
           categories={categories}
-          showPlaceholderNote={isPlaceholderPreview(postsAll)}
+          showPreviewNote={isPreviewContent(postsAll)}
         />
       </Suspense>
     </div>

@@ -42,7 +42,7 @@ export function HireContactForm() {
     if (res.code === "missing_api") {
       setError(
         publicContactEmail
-          ? "The form needs the API in production. Use the email address below to reach me."
+          ? "This form isn’t available here—use the email below to get in touch."
           : res.error,
       );
     } else {
@@ -79,8 +79,8 @@ export function HireContactForm() {
       {!getApiBase() ? (
         <p className="rounded-lg border border-amber-500/25 bg-amber-950/25 px-3 py-2 text-sm text-amber-100/90">
           {publicContactEmail
-            ? "Static builds can’t post to the API. Use the email at the bottom of this form."
-            : "Set NEXT_PUBLIC_API_URL for the form to submit, or set NEXT_PUBLIC_CONTACT_EMAIL to show a public address here."}
+            ? "Messages can’t be sent from this build—use the email at the bottom of the page."
+            : "The contact form isn’t configured for this environment yet."}
         </p>
       ) : null}
 
