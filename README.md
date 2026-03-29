@@ -23,6 +23,8 @@ npm run build   # static export → frontend/out/ (GitHub Pages)
 
 **GitHub Pages:** the deploy workflow reads **`NEXT_PUBLIC_API_URL`** from the repository **Actions variables** (Settings → Secrets and variables → Actions → Variables). Set it to your public API base URL with no trailing slash (for example `https://your-api.example.com`). Local dev still uses `frontend/.env.local`.
 
+**Going live (site + API + DB on the internet):** follow **[docs/GO_LIVE.md](docs/GO_LIVE.md)** (checklist). AWS details: **[docs/AWS_DEPLOY.md](docs/AWS_DEPLOY.md)**.
+
 ## Backend
 
 ```bash
