@@ -1,5 +1,6 @@
 # dependencies
 /node_modules
+/frontend/node_modules
 /.pnp
 .pnp.*
 .yarn/*
@@ -10,7 +11,9 @@
 
 /coverage
 /.next/
+/frontend/.next/
 /out/
+/frontend/out/
 /build
 
 .DS_Store
@@ -24,6 +27,16 @@ yarn-error.log*
 .vercel
 
 *.tsbuildinfo
+
+# Python / Django (backend)
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+backend/db.sqlite3
+backend/staticfiles/
+backend/media/
 
 # Editor / agent scratch (keep repo clean)
 AGENTS.md
