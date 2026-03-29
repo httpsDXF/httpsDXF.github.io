@@ -17,6 +17,14 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load backend/.env so DATABASE_URL and other vars work without manual export (local dev).
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv(BASE_DIR / ".env")
+except ImportError:
+    pass
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -97,10 +105,20 @@ _database_url = os.environ.get("DATABASE_URL", "").strip()
 if _database_url:
     import dj_database_url
 
+    # RDS / managed Postgres: use SSL (default when DEBUG is off).
+    # Local Postgres without SSL: set DATABASE_SSL_REQUIRE=false or add ?sslmode=disable to URL.
+    _ssl_env = os.environ.get("DATABASE_SSL_REQUIRE", "").strip().lower()
+    if _ssl_env in ("1", "true", "yes"):
+        _ssl_require = True
+    elif _ssl_env in ("0", "false", "no"):
+        _ssl_require = False
+    else:
+        _ssl_require = not DEBUG
+
     DATABASES["default"] = dj_database_url.parse(
         _database_url,
         conn_max_age=600,
-        ssl_require=True,
+        ssl_require=_ssl_require,
     )
 
 

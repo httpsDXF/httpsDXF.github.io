@@ -31,10 +31,13 @@ python -m venv .venv
 # Windows: .venv\Scripts\activate
 # macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
+cp .env.example .env   # optional; edit DJANGO_SECRET_KEY and DATABASE_URL if needed
 python manage.py migrate
 python manage.py createsuperuser   # staff user for dashboard / JWT
 python manage.py runserver
 ```
+
+**Database:** With **no** `DATABASE_URL` in `backend/.env`, Django uses **SQLite** (`backend/db.sqlite3`). Your models are applied with `migrate` — no separate “connect models” step. For **PostgreSQL** (production or local), set `DATABASE_URL` in `backend/.env` (see `backend/.env.example`), then run `migrate` again. `DATABASE_SSL_REQUIRE=false` helps local Postgres without SSL.
 
 API routes:
 

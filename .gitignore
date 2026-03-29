@@ -23,7 +23,15 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-.env*
+# Secrets and local overrides (keep *.example files in git)
+.env
+.env.local
+.env.*.local
+backend/.env
+frontend/.env.local
+!.env.example
+!**/.env.example
+!**/.env.local.example
 .vercel
 
 *.tsbuildinfo
