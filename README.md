@@ -21,6 +21,8 @@ npm run build   # static export → frontend/out/ (GitHub Pages)
 - **Blog** — `/blog` and `/blog/[slug]` load published posts from the API when `NEXT_PUBLIC_API_URL` is set.
 - **Dashboard** — `/dashboard` (JWT login) for staff: create blog posts and upload experiment models.
 
+**GitHub Pages:** the deploy workflow reads **`NEXT_PUBLIC_API_URL`** from the repository **Actions variables** (Settings → Secrets and variables → Actions → Variables). Set it to your public API base URL with no trailing slash (for example `https://your-api.example.com`). Local dev still uses `frontend/.env.local`.
+
 ## Backend
 
 ```bash
