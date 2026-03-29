@@ -2,11 +2,20 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { mainNavItems } from "../config/navigation";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
 
   return (
     <header className="relative z-[100] w-full px-[5%] pt-6 md:pt-8">
@@ -55,44 +64,49 @@ export function SiteHeader() {
           onClick={() => setOpen((v) => !v)}
         >
           <span className="sr-only">Menu</span>
-          {open ? (
-            <svg
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          ) : (
-            <svg
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-          )}
+          <span
+            className={`relative block h-5 w-5 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              open ? "rotate-90" : "rotate-0"
+            }`}
+            aria-hidden
+          >
+            {open ? (
+              <svg
+                className="absolute inset-0 h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            ) : (
+              <svg
+                className="absolute inset-0 h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            )}
+          </span>
         </button>
       </div>
 
       <div
         id="mobile-nav"
-        className={`fixed inset-0 z-[90] flex min-h-dvh flex-col bg-black/92 px-[5%] pb-10 pt-24 backdrop-blur-md transition-[opacity,visibility] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] md:hidden ${
-          open
-            ? "visible opacity-100"
-            : "invisible pointer-events-none opacity-0"
+        className={`mobile-nav-layer fixed inset-0 z-[90] flex min-h-dvh flex-col px-[5%] pb-10 pt-24 md:hidden ${
+          open ? "mobile-nav-layer--open" : ""
         }`}
         aria-hidden={!open}
       >
@@ -105,7 +119,7 @@ export function SiteHeader() {
               <Link
                 key={href}
                 href={href}
-                className="interaction-fast block rounded-lg px-4 py-3 text-center text-lg font-medium text-white/95 hover:bg-white/10 active:scale-[0.99]"
+                className="mobile-nav-link interaction-fast block rounded-lg px-4 py-3 text-center text-lg font-medium text-white/95 hover:bg-white/10 active:scale-[0.99]"
                 onClick={() => setOpen(false)}
               >
                 {label}
@@ -113,7 +127,7 @@ export function SiteHeader() {
             ))}
             <Link
               href="/me"
-              className="interaction-smooth mt-2 block rounded-md border border-white/25 bg-white/10 px-4 py-3 text-center text-lg font-medium text-white hover:border-white/40 hover:bg-white/15 active:scale-[0.99]"
+              className="mobile-nav-link interaction-smooth mt-2 block rounded-md border border-white/25 bg-white/10 px-4 py-3 text-center text-lg font-medium text-white hover:border-white/40 hover:bg-white/15 active:scale-[0.99]"
               onClick={() => setOpen(false)}
             >
               Hire Me

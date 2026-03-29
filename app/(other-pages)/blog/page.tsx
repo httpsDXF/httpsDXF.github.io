@@ -1,3 +1,13 @@
+import type { Metadata } from "next";
+import { siteUrl } from "../../config/site";
+
+export const metadata: Metadata = {
+  title: "Blog",
+  description:
+    "Writing and notes by Yaw Appiah (httpsDXF) — engineering, STEAM, and technology.",
+  alternates: { canonical: `${siteUrl}/blog` },
+};
+
 export default function BlogPage() {
   return (
     <div>

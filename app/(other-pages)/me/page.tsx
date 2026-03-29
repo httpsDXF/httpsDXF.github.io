@@ -1,3 +1,12 @@
+import type { Metadata } from "next";
+import { siteConfig, siteUrl } from "../../config/site";
+
+export const metadata: Metadata = {
+  title: "About & contact",
+  description: `About Yaw Nhyira Antwi Appiah (httpsDXF) — ${siteConfig.person.jobTitle.join(", ")}. Contact and hire information.`,
+  alternates: { canonical: `${siteUrl}/me` },
+};
+
 export default function MePage() {
   return (
     <div>

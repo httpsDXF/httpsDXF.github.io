@@ -1,3 +1,13 @@
+import type { Metadata } from "next";
+import { siteUrl } from "../../config/site";
+
+export const metadata: Metadata = {
+  title: "Experiments",
+  description:
+    "Experiments and prototypes by Yaw Appiah (httpsDXF) — software, robotics, and mechatronics.",
+  alternates: { canonical: `${siteUrl}/experiments` },
+};
+
 export default function ExperimentsPage() {
   return (
     <div>

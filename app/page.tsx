@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import { HeroHome } from "./components/HeroHome";
+import { siteUrl } from "./config/site";
+
+export const metadata: Metadata = {
+  alternates: { canonical: siteUrl },
+};
 import { SiteHeader } from "./components/SiteHeader";
 import { fontHeroBody, fontHeroDisplay, fontHeroTagline } from "./fonts";
 
