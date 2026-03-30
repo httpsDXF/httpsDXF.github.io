@@ -20,7 +20,7 @@ export default function MePage() {
           className="card-fade-up mx-auto w-full max-w-sm lg:mx-0 lg:max-w-none"
           style={{ "--card-fade-delay": "0ms" } as CSSProperties}
         >
-          <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl ring-1 ring-white/10">
+          <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl">
             <Image
               src="/me.png"
               alt="Yaw Nhyira Antwi Appiah"
