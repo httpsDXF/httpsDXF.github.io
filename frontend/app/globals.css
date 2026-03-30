@@ -124,10 +124,54 @@
   transition-timing-function: var(--ease-smooth);
 }
 
+/* Desktop main nav: underline draws in; respects reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+  .nav-link-desktop::after {
+    content: "";
+    position: absolute;
+    left: 0.2rem;
+    right: 0.2rem;
+    bottom: -0.2rem;
+    height: 2px;
+    border-radius: 9999px;
+    background-color: rgb(255 255 255);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.32s var(--ease-smooth);
+    pointer-events: none;
+  }
+
+  .nav-link-desktop[aria-current="page"]::after {
+    transform: scaleX(1);
+  }
+
+  .nav-link-desktop:not([aria-current="page"]):hover::after {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-link-desktop::after {
+    content: "";
+    position: absolute;
+    left: 0.2rem;
+    right: 0.2rem;
+    bottom: -0.2rem;
+    height: 2px;
+    border-radius: 9999px;
+    background-color: rgb(255 255 255);
+    pointer-events: none;
+  }
+
+  .nav-link-desktop[aria-current="page"]::after {
+    transform: scaleX(1);
+  }
+}
+
 /* Mobile full-screen nav: backdrop + staggered links */
 .mobile-nav-layer {
   --mobile-nav-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --mobile-nav-dur: 480ms;
+  --mobile-nav-dur: 520ms;
   background-color: rgb(0 0 0 / 0);
   backdrop-filter: blur(0);
   -webkit-backdrop-filter: blur(0);
@@ -164,10 +208,11 @@
 @media (prefers-reduced-motion: no-preference) {
   .mobile-nav-layer .mobile-nav-link {
     opacity: 0;
-    transform: translate3d(0, 18px, 0);
+    transform: translate3d(0, 14px, 0);
     transition:
-      opacity 0.42s var(--mobile-nav-ease),
-      transform 0.42s var(--mobile-nav-ease);
+      opacity 0.48s var(--mobile-nav-ease),
+      transform 0.48s var(--mobile-nav-ease),
+      background-color 0.24s var(--ease-smooth);
   }
 
   .mobile-nav-layer--open .mobile-nav-link:nth-child(1) {
@@ -202,7 +247,7 @@
 
   .mobile-nav-layer:not(.mobile-nav-layer--open) .mobile-nav-link {
     transition-delay: 0ms;
-    transition-duration: 0.22s;
+    transition-duration: 0.26s;
   }
 }
 

@@ -54,10 +54,8 @@ export function SiteHeader() {
                 key={href}
                 href={href}
                 aria-current={active ? "page" : undefined}
-                className={`interaction-fast relative rounded-md px-1 py-0.5 transition-colors ${
-                  active
-                    ? "font-semibold text-white after:absolute after:inset-x-1 after:-bottom-1 after:h-0.5 after:rounded-full after:bg-white"
-                    : "text-white/75 hover:text-white"
+                className={`nav-link-desktop relative rounded-md px-1 py-0.5 text-white/75 transition-[color,transform] duration-(--t-ui) ease-(--ease-smooth) hover:-translate-y-px hover:text-white ${
+                  active ? "font-semibold text-white" : ""
                 }`}
               >
                 {label}
@@ -67,7 +65,7 @@ export function SiteHeader() {
           <Link
             href="/hire"
             aria-current={pathname === "/hire" ? "page" : undefined}
-            className={`interaction-smooth rounded-md border px-4 py-2 hover:scale-[1.02] active:scale-[0.98] ${
+            className={`nav-hire-cta interaction-smooth rounded-md border px-4 py-2 transition-[transform,background-color,border-color,box-shadow] duration-(--t-ui) ease-(--ease-smooth) hover:scale-[1.02] active:scale-[0.98] ${
               pathname === "/hire"
                 ? "border-white/45 bg-white/15 font-semibold text-white shadow-[0_0_0_1px_rgba(255,255,255,0.12)]"
                 : "border-white/20 bg-white/10 text-white hover:border-white/35 hover:bg-white/15"
