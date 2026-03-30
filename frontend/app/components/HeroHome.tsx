@@ -58,7 +58,7 @@ export function HeroHome({
           <p
             className={`${taglineFontClass} hero-enter hero-enter-delay-1 mt-6 max-w-xl px-2 text-center text-[clamp(1rem,3.2vw,1.35rem)] font-bold leading-snug tracking-tight text-white sm:mt-7 sm:px-0`}
           >
-            Software, mechanical, and mechatronics work.
+            Brains. Grit. Zero.
           </p>
           <Link
             href="/portfolio"
